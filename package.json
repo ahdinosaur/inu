@@ -1,0 +1,47 @@
+{
+  "name": "pull-app",
+  "version": "0.0.0",
+  "description": "modular user interfaces using pull streams",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js",
+    "start": "budo example:bundle.js -d example --live -- -d",
+    "bundle": "browserify example -g envify -g uglifyify",
+    "build": "npm run --silent bundle -- -o example/bundle.js",
+    "disc": "npm run --silent bundle -- --full-paths | discify --open",
+    "push": "gh-pages -d example",
+    "deploy": "npm-run-all -s build push"
+  },
+  "browserify": {
+    "transform": []
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahdinosaur/pull-app.git"
+  },
+  "keywords": [],
+  "author": "Mikey <michael.williams@enspiral.com> (http://dinosaur.is)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ahdinosaur/pull-app/issues"
+  },
+  "homepage": "https://github.com/ahdinosaur/pull-app#readme",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "budo": "^8.1.0",
+    "disc": "^1.3.2",
+    "envify": "^3.4.0",
+    "gh-pages": "^0.11.0",
+    "npm-run-all": "^1.6.0",
+    "tape": "^4.5.1",
+    "uglifyify": "^3.0.1",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "pull-cat": "^1.1.9",
+    "pull-delay": "^1.0.1",
+    "pull-fork": "^2.1.0",
+    "pull-pushable": "^2.0.0",
+    "pull-stream": "^3.3.2"
+  }
+}
