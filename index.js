@@ -45,7 +45,6 @@ function getStreams (app, eventVent) {
 
   var viewObs = computed([modelObs], function (model) {
     var nextView = app.view(model, dispatch)
-    console.log('nextView', nextView)
     return nextView
   })
 

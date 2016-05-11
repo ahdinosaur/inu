@@ -1,4 +1,4 @@
-var html = require('yo-yo')
+//var html = require('yo-yo')
 var pull = require('pull-stream')
 var delay = require('pull-delay')
 var start = require('../')
@@ -23,15 +23,20 @@ var app = {
           effect: 'SCHEDULE_TICK'
         }
       default:
-        return { model }
+        return { model: model }
     }
   },
 
   view: function (model, dispatch) {
-    console.log('model', model, html`<div>Seconds Elapsed: ${model}</div>`)
+    var el = document.createElement('div')
+    el.textContent = "Seconds Elapsed: " + model
+    return el
+
+    /*
     return html`
       <div>Seconds Elapsed: ${model}</div>
     `
+    */
   },
 
   run: function (effect) {
@@ -49,5 +54,5 @@ var streams = start(app)
 
 streams.watchView(function (view) {
   main.innerHTML = view.outerHTML
-  // why is html.update(main, view) failing?
+  // html.update(main, view)
 })
