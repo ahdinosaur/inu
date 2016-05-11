@@ -1,11 +1,12 @@
-const pull = require('pull-stream')
-const html = require('yo-yo')
-const delay = require('pull-delay')
-const start = require('../')
+var html = require('yo-yo')
+var pull = require('pull-stream')
+var delay = require('pull-delay')
+var start = require('../')
 
-const main = document.querySelector('main')
+var main = document.querySelector('main')
 
-const app = {
+// clock demo
+var app = {
 
   init: function () {
     return {
@@ -26,7 +27,8 @@ const app = {
     }
   },
 
-  view: function (model) {
+  view: function (model, dispatch) {
+    console.log('model', model, html`<div>Seconds Elapsed: ${model}</div>`)
     return html`
       <div>Seconds Elapsed: ${model}</div>
     `
@@ -43,8 +45,9 @@ const app = {
   }
 }
 
-pull(
-  start(example),
-  pull.drain(function (view) {
-    html.update(main, view)
-  })
+var streams = start(app)
+
+streams.watchView(function (view) {
+  main.innerHTML = view.outerHTML
+  // why is html.update(main, view) failing?
+})

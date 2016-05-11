@@ -1,9 +1,9 @@
-# pull-app
+# chur
 
-modular user interfaces using [pull streams](https://github.com/dominictarr/pull-streams)
+composable user interface state and effects manager
 
 ```shell
-npm install --save pull-app
+npm install --save ahdinosaur/chur
 ```
 
 inspired by:
@@ -14,7 +14,7 @@ inspired by:
 
 ## example
 
-see [./example](https://ahdinosaur.github.io/pull-app)
+see [source](./example/index.js) and [demo](https://ahdinosaur.github.io/chur)
 
 ## usage
 
@@ -27,9 +27,17 @@ an `app` is defined by an object with the following keys:
 - `view`: a `view(model, dispatch)` pure function, returns the user interface declaration
 - `run` (optional): a `run(effect, eventStream)` function, returns an optional source stream of future events
 
-### `start = require('pull-app')`
+### `start = require('chur')`
 
-### `start(app)`
+### `streams = start(app)`
+
+streams is an object with the following keys:
+
+- `watchModel`: an [observ](https://github.com/Raynos/observ) watcher for current model
+- `watchView`: an [observ](https://github.com/Raynos/observ) watcher for current view
+- `watchEffect`: an [observ](https://github.com/Raynos/observ) watcher for current effect
+- `onEvent`: a [geval](https://github.com/Raynos/geval) handler for new events
+- `onNextEvent`: a [geval](https://github.com/Raynos/geval) handler for next events to be dispatched
 
 ## license
 

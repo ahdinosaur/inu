@@ -1,7 +1,7 @@
 {
-  "name": "pull-app",
+  "name": "chur",
   "version": "0.0.0",
-  "description": "modular user interfaces using pull streams",
+  "description": "composable user interface state and effects manager",
   "main": "index.js",
   "scripts": {
     "test": "tape test.js",
@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahdinosaur/pull-app.git"
+    "url": "git+https://github.com/ahdinosaur/chur.git"
   },
   "keywords": [],
   "author": "Mikey <michael.williams@enspiral.com> (http://dinosaur.is)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ahdinosaur/pull-app/issues"
+    "url": "https://github.com/ahdinosaur/chur/issues"
   },
-  "homepage": "https://github.com/ahdinosaur/pull-app#readme",
+  "homepage": "https://github.com/ahdinosaur/chur#readme",
   "devDependencies": {
     "browserify": "^13.0.0",
     "budo": "^8.1.0",
@@ -35,13 +35,13 @@
     "npm-run-all": "^1.6.0",
     "tape": "^4.5.1",
     "uglifyify": "^3.0.1",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "yo-yo": "^1.2.0"
   },
   "dependencies": {
-    "pull-cat": "^1.1.9",
-    "pull-delay": "^1.0.1",
-    "pull-fork": "^2.1.0",
-    "pull-pushable": "^2.0.0",
+    "ap": "^0.2.0",
+    "geval": "^2.1.1",
+    "observ": "^0.2.0",
     "pull-stream": "^3.3.2"
   }
 }
