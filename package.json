@@ -1,6 +1,6 @@
 {
   "name": "chur",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "composable user interface state and effects manager",
   "main": "index.js",
   "scripts": {
