@@ -8,7 +8,7 @@
     "start": "budo example:bundle.js -d example --live -- -d",
     "bundle": "browserify example -g envify -g uglifyify",
     "build": "npm run --silent bundle -- -o example/bundle.js",
-    "disc": "npm run --silent bundle -- --full-paths | discify --open",
+    "disc": "browserify index.js -g envify -g uglifyify --full-paths | discify --open",
     "push": "gh-pages -d example",
     "deploy": "npm-run-all -s build push"
   },
@@ -39,9 +39,7 @@
     "yo-yo": "^1.2.0"
   },
   "dependencies": {
-    "ap": "^0.2.0",
-    "geval": "^2.1.1",
-    "observ": "^0.2.0",
-    "pull-stream": "^3.3.2"
+    "pull-stream": "^3.3.2",
+    "push-stream": "^2.0.2"
   }
 }

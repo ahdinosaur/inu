@@ -52,7 +52,7 @@ var app = {
 
 var streams = start(app)
 
-streams.watchView(function (view) {
+streams.viewStream(function (view) {
   main.innerHTML = view.outerHTML
   // html.update(main, view)
 })

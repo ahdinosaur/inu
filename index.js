@@ -1,77 +1,100 @@
-var Event = require('geval/event')
-var Observ = require('observ')
-var computed = require('observ/computed')
-var watch = require('observ/watch')
-var ap = require('ap')
+var Stream = require('push-stream/stream')
+var StateStream = require('push-stream/state')
+var MapStream = require('push-stream/map')
+var FilterStream = require('push-stream/filter')
+var UniqStream = require('push-stream/uniq')
+var ReadableStream = require('push-stream/readable')
+var push = require('push-stream/push')
 var pull = require('pull-stream/pull')
 var drain = require('pull-stream/sinks').drain
 
 module.exports = start
 
 function start (app) {
-  var streams
+  var eventStream = Stream()
+  var streams = getStreams(app, eventStream)
 
-  var eventVent = Event()
-  var streams = getStreams(app, eventVent)
-
-  streams.onNextEvent(function (nextEvent) {
+  streams.nextEventStream(function (nextEvent) {
     process.nextTick(function () {
-      eventVent.broadcast(nextEvent)
+      eventStream.push(nextEvent)
     })
   })
 
   return streams
 }
 
-function getStreams (app, eventVent) {
-  var onEvent = eventVent.listen
+function getStreams (app, eventStream) {
+  var onStopCallbacks = []
+  var readableEventStream = ReadableStream(eventStream)
 
   function dispatch (nextEvent) {
-    eventVent.broadcast(nextEvent)
+    eventStream.push(nextEvent)
   }
 
   var initialState = app.init()
-  var stateObs = Observ(initialState)
+  var stateStream = StateStream(initialState)
 
-  onEvent(function (event) {
-    var state = stateObs()
+  readableEventStream(function (event) {
+    var state = stateStream()
     var nextState = app.update(state.model, event)
-    stateObs.set(nextState)
+    stateStream.push(nextState)
   })
 
-  var modelObs = computed([stateObs], function (state) {
-    return state.model
-  })
+  var modelStream = StateStream()
+  onStopCallbacks.push(push(
+    stateStream,
+    MapStream(function (state) { return state.model }),
+    UniqStream(),
+    modelStream
+  ))
 
-  var viewObs = computed([modelObs], function (model) {
-    var nextView = app.view(model, dispatch)
-    return nextView
-  })
+  var viewStream = StateStream()
+  onStopCallbacks.push(push(
+    modelStream,
+    MapStream(function (model) {
+      return app.view(model, dispatch)
+    }),
+    FilterStream(isNotNil),
+    viewStream
+  ))
 
-  var effectObs = computed([stateObs], function (state) {
-    return state.effect
-  })
+  var effectStream = StateStream()
+  onStopCallbacks.push(push(
+    stateStream,
+    MapStream(function (state) { return state.effect }),
+    FilterStream(isNotNil),
+    effectStream
+  ))
 
-  var nextEventVent = Event()
-
-  watch(effectObs, function (effect) {
-    if (effect == null) return
-
-    pull(
-      app.run(effect, onEvent),
-      drain(function (nextEvent) {
-        if (nextEvent == null) return
-
-        nextEventVent.broadcast(nextEvent)
-      })
-    )
-  })
+  var nextEventStream = Stream()
+  onStopCallbacks.push(push(
+    effectStream,
+    MapStream(function (effect) {
+      pull(
+        app.run(effect, readableEventStream),
+        drain(function (nextEvent) {
+          if (isNotNil(nextEvent)) {
+            nextEventStream.push(nextEvent)
+          }
+        })
+      )
+    })
+  ))
 
   return {
-    onEvent: eventVent.listen,
-    onNextEvent: nextEventVent.listen,
-    watchModel: ap.partial(watch, modelObs),
-    watchView: ap.partial(watch, viewObs),
-    watchEffect: ap.partial(watch, effectObs)
+    stop: stop,
+    eventStream: readableEventStream,
+    nextEventStream: ReadableStream(nextEventStream),
+    modelStream: ReadableStream(modelStream),
+    viewStream: ReadableStream(viewStream),
+    effectStream: ReadableStream(effectStream)
+  }
+
+  function stop () {
+    for (var i = 0; i < onStopCallbacks.length; i++) {
+      onStopCallbacks()
+    }
   }
 }
+
+function isNotNil (x) { return x != null }
