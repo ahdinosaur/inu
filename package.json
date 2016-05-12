@@ -1,5 +1,5 @@
 {
-  "name": "chur",
+  "name": "inu",
   "version": "1.0.0",
   "description": "composable user interface state and effects manager",
   "main": "index.js",
@@ -17,15 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahdinosaur/chur.git"
+    "url": "git+https://github.com/ahdinosaur/inu.git"
   },
   "keywords": [],
   "author": "Mikey <michael.williams@enspiral.com> (http://dinosaur.is)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ahdinosaur/chur/issues"
+    "url": "https://github.com/ahdinosaur/inu/issues"
   },
-  "homepage": "https://github.com/ahdinosaur/chur#readme",
+  "homepage": "https://github.com/ahdinosaur/inu#readme",
   "devDependencies": {
     "browserify": "^13.0.0",
     "budo": "^8.1.0",

@@ -1,9 +1,9 @@
-# chur
+# inu
 
-composable user interface state and effects manager
+simple composable unidirectional user interfaces
 
 ```shell
-npm install --save ahdinosaur/chur
+npm install --save inu
 ```
 
 inspired by:
@@ -14,7 +14,7 @@ inspired by:
 
 ## example
 
-see [source](./example/index.js) and [demo](https://ahdinosaur.github.io/chur)
+see [source](./example/index.js) and [demo](https://ahdinosaur.github.io/inu)
 
 ## usage
 
@@ -25,19 +25,19 @@ an `app` is defined by an object with the following keys:
 - `init`: a function returning the initial state ()
 - `update`: a `update(model, event)` pure function, returns the new state
 - `view`: a `view(model, dispatch)` pure function, returns the user interface declaration
-- `run` (optional): a `run(effect, eventStream)` function, returns an optional source stream of future events
+- `run` (optional): a `run(effect, eventStream)` function, returns an optional [pull source stream](https://github.com/dominictarr/pull-stream) of future events
 
-### `start = require('chur')`
+### `start = require('inu')`
 
 ### `streams = start(app)`
 
 streams is an object with the following keys:
 
-- `watchModel`: an [observ](https://github.com/Raynos/observ) watcher for current model
-- `watchView`: an [observ](https://github.com/Raynos/observ) watcher for current view
-- `watchEffect`: an [observ](https://github.com/Raynos/observ) watcher for current effect
-- `onEvent`: a [geval](https://github.com/Raynos/geval) handler for new events
-- `onNextEvent`: a [geval](https://github.com/Raynos/geval) handler for next events to be dispatched
+- `watchModel`: an [push stream](https://github.com/ahdinosaur/push-stream) for current model
+- `watchView`: an [push stream](https://github.com/ahdinosaur/push-stream) for current view
+- `watchEffect`: an [push stream](https://github.com/ahdinosaur/push-stream) for current effect
+- `onEvent`: a [push stream](https://github.com/ahdinosaur/push-stream) for new events
+- `onNextEvent`: a [push stream](https://github.com/ahdinosaur/push-stream) for next events to be dispatched
 
 ## license
 
