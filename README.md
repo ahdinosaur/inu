@@ -33,11 +33,11 @@ an `app` is defined by an object with the following keys:
 
 streams is an object with the following keys:
 
-- `watchModel`: an [push stream](https://github.com/ahdinosaur/push-stream) for current model
-- `watchView`: an [push stream](https://github.com/ahdinosaur/push-stream) for current view
-- `watchEffect`: an [push stream](https://github.com/ahdinosaur/push-stream) for current effect
-- `onEvent`: a [push stream](https://github.com/ahdinosaur/push-stream) for new events
-- `onNextEvent`: a [push stream](https://github.com/ahdinosaur/push-stream) for next events to be dispatched
+- `eventStream`: a [push stream](https://github.com/ahdinosaur/push-stream) for events
+- `modelStream`: a [push stream](https://github.com/ahdinosaur/push-stream) for current model
+- `viewStream`: a [push stream](https://github.com/ahdinosaur/push-stream) for current view
+- `effectStream`: a [push stream](https://github.com/ahdinosaur/push-stream) for current effect
+- `nextEventStream`: a [push stream](https://github.com/ahdinosaur/push-stream) for next events to be dispatched
 
 ## license
 
