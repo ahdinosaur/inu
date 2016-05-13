@@ -1,6 +1,6 @@
 {
   "name": "inu",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "composable user interface state and effects manager",
   "main": "index.js",
   "scripts": {
