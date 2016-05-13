@@ -1,58 +1,24 @@
-//var html = require('yo-yo')
-var pull = require('pull-stream')
-var delay = require('pull-delay')
-var start = require('../')
+const html = require('yo-yo')
+const inu = require('../')
 
-var main = document.querySelector('main')
+const compose = require('./compose')
 
-// clock demo
-var app = {
+const main = document.querySelector('main')
 
-  init: function () {
-    return {
-      model: 0,
-      effect: 'SCHEDULE_TICK' // start perpetual motion
-    }
-  },
+const apps = [
+  require('./title'),
+  require('./clock')
+]
 
-  update: function (model, event) {
-    switch (event) {
-      case 'TICK':
-        return {
-          model: model === 59 ? 0 : model + 1,
-          effect: 'SCHEDULE_TICK'
-        }
-      default:
-        return { model: model }
-    }
-  },
+const app = compose(apps, (a, b) => html`
+  <main>
+    ${a}
+    ${b}
+  </main>
+`)
 
-  view: function (model, dispatch) {
-    var el = document.createElement('div')
-    el.textContent = "Seconds Elapsed: " + model
-    return el
-
-    /*
-    return html`
-      <div>Seconds Elapsed: ${model}</div>
-    `
-    */
-  },
-
-  run: function (effect) {
-    switch (effect) {
-      case 'SCHEDULE_TICK':
-        return pull(
-          pull.values(['TICK']),
-          delay(1000)
-        )
-    }
-  }
-}
-
-var streams = start(app)
+const streams = inu.start(app)
 
 streams.viewStream(function (view) {
-  main.innerHTML = view.outerHTML
-  // html.update(main, view)
+  html.update(main, view)
 })
