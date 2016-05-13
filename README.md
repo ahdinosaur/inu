@@ -10,7 +10,7 @@ npm install --save inu
 
 ## why?
 
-explained best by [`jarvisaoieong/redux-architecture`](https://raw.githubusercontent.com/jarvisaoieong/redux-architecture),
+explained best by [`jarvisaoieong/redux-architecture`](https://github.com/jarvisaoieong/redux-architecture),
 
 > In classical [Redux](https://github.com/reactjs/redux), which side effect is handled by thunk middleware, is not [fractal](http://staltz.com/unidirectional-user-interface-architectures.html) (a term that is nicely explained by @stalz)
 
