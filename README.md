@@ -10,7 +10,7 @@ npm install --save inu
 
 ## example
 
-```
+```js
 const inu = require('inu')
 
 const app = {
