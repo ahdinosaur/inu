@@ -1,6 +1,4 @@
-const html = require('yo-yo')
-const push = require('push-stream')
-const pull = require('pull-stream')
+const { html, pull } = require('../')
 const cat = require('pull-cat')
 
 // apps as groupoid
@@ -21,8 +19,8 @@ function compose ([x, y], template = defaultTemplate) {
     },
 
     view ([mx, my], dispatch) {
-      const dispatchX = event => dispatch([event])
-      const dispatchY = event => dispatch([null, event])
+      const dispatchX = action => dispatch([action])
+      const dispatchY = action => dispatch([null, action])
 
       return template(
         x.view(mx, dispatchX),
@@ -30,46 +28,30 @@ function compose ([x, y], template = defaultTemplate) {
       )
     },
 
-    run ([effx, effy], eventStream) {
-      // TODO this is too much code
-      const eventXStream = push.stream()
-      var nextEventXStream = pull.empty()
-      if (effx && x.run) {
-        // TODO how to destroy push streams listeners when done?
-        push(
-          eventStream,
-          push.map(value => value[0]),
-          push.filter(isNotNil),
-          eventXStream
-        )
-        nextEventXStream = pull(
-          x.run(effx, eventXStream) || nextEventXStream,
-          pull.map(event => [event])
-        )
-      }
-
-      const eventYStream = push.stream()
-      var nextEventYStream = pull.empty()
-      if (effy && y.run) {
-        // TODO how to destroy push streams listeners when done?
-        push(
-          eventStream,
-          push.map(value => value[1]),
-          push.filter(isNotNil),
-          eventYStream
-        )
-        nextEventYStream = pull(
-          y.run(effy, eventYStream) || nextEventYStream,
-          pull.map(event => [null, event])
-        )
-      }
-      return cat([nextEventXStream, nextEventYStream])
+    run ([effx, effy], actions) {
+      const nextActionsX = (effx && x.run) ? pull(
+        x.run(effx, () => pull(
+          actions(),
+          pull.map(value => value[0]),
+          pull.filter(isNotNil)
+        )) || pull.empty(),
+        pull.map(action => [action])
+      ) : pull.empty()
+      const nextActionsY = (effy && y.run) ? pull(
+        y.run(effy, () => pull(
+          actions(),
+          pull.map(value => value[1]),
+          pull.filter(isNotNil)
+        )) || pull.empty(),
+        pull.map(action => [null, action])
+      ) : pull.empty()
+      return cat([nextActionsX, nextActionsY])
     }
   }
 }
 
 function composeStates (x, y) {
-  console.log(x, y)
+  console.log('compose state', x, y)
   return {
     model: [x.model, y.model],
     effect: x.effect || y.effect ? [x.effect, y.effect] : null
