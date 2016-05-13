@@ -6,15 +6,63 @@ simple composable unidirectional user interfaces
 npm install --save inu
 ```
 
-inspired by:
-
-- [tom](https://github.com/gcanti/tom)
-- [redux-architecture](https://github.com/jarvisaoieong/redux-architecture)
-- [elm-architecture-tutorial](https://github.com/evancz/elm-architecture-tutorial)
+![shiba inu](https://upload.wikimedia.org/wikipedia/en/5/5f/Original_Doge_meme.jpg)
 
 ## example
 
-see [source](./example/index.js) and [demo](https://ahdinosaur.github.io/inu)
+```
+const inu = require('inu')
+
+const app = {
+
+  init: () => ({
+    model: 0,
+    effect: 'SCHEDULE_TICK' // start perpetual motion
+  }),
+
+  update: (model, event) => {
+    switch (event) {
+      case 'TICK':
+        return {
+          model: model === 59 ? 0 : model + 1,
+          effect: 'SCHEDULE_TICK'
+        }
+      default:
+        return { model }
+    }
+  },
+
+  view: (model, dispatch) => html`
+    <div class='clock'>
+      Seconds Elapsed: ${model}
+    </div>
+  `,
+
+  run: (effect) => {
+    switch (effect) {
+      case 'SCHEDULE_TICK':
+        return pull(
+          pull.values(['TICK']),
+          delay(1000)
+        )
+    }
+  }
+}
+
+const { viewStream } = inu.start(app)
+
+var element
+viewStream((view) => {
+  if (!element) {
+    element = view
+    document.body.appendChild(element)
+  } else {
+    inu.html.update(element, view)
+  }
+})
+```
+
+for a full example of composing multiple apps together, see [source](./example/index.js) and [demo](https://ahdinosaur.github.io/inu).
 
 ## usage
 
@@ -27,9 +75,13 @@ an `app` is defined by an object with the following keys:
 - `view`: a `view(model, dispatch)` pure function, returns the user interface declaration
 - `run` (optional): a `run(effect, eventStream)` function, returns an optional [pull source stream](https://github.com/dominictarr/pull-stream) of future events
 
-### `start = require('inu')`
+### `inu = require('inu')`
 
-### `streams = start(app)`
+the top-level `inu` module is a grab bag of all `inu/*` modules.
+
+you can also require each module separately like `require('inu/start')`.
+
+### `streams = inu.start(app)`
 
 streams is an object with the following keys:
 
@@ -38,6 +90,17 @@ streams is an object with the following keys:
 - `viewStream`: a [push stream](https://github.com/ahdinosaur/push-stream) for current view
 - `effectStream`: a [push stream](https://github.com/ahdinosaur/push-stream) for current effect
 - `nextEventStream`: a [push stream](https://github.com/ahdinosaur/push-stream) for next events to be dispatched
+
+### `inu.html === require('yo-yo')`
+
+### `inu.pull === require('pull-stream')`
+
+## inspiration
+
+- [tom](https://github.com/gcanti/tom)
+- [redux-architecture](https://github.com/jarvisaoieong/redux-architecture)
+- [elm-architecture-tutorial](https://github.com/evancz/elm-architecture-tutorial)
+- [mercury](https://github.com/Raynos/mercury)
 
 ## license
 
