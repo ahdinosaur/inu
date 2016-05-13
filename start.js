@@ -1,100 +1,118 @@
-var Stream = require('push-stream/stream')
-var StateStream = require('push-stream/state')
-var MapStream = require('push-stream/map')
-var FilterStream = require('push-stream/filter')
-var UniqStream = require('push-stream/uniq')
-var ReadableStream = require('push-stream/readable')
-var push = require('push-stream/push')
-var pull = require('pull-stream/pull')
-var drain = require('pull-stream/sinks').drain
+var pull = require('pull-stream')
+var notify = require('pull-notify')
 
 module.exports = start
 
+/*
+    --------- next actions <------
+    v                             |
+actions -> states -> effects -> run
+    ^         |
+    |         -----> models -> views
+    |                             |
+    ----------- dispatch <--------
+*/
+
 function start (app) {
-  var eventStream = Stream()
-  var streams = getStreams(app, eventStream)
+  var actions = notify()
+  var nextActions = notify()
 
-  streams.nextEventStream(function (nextEvent) {
-    setTimeout(function () {
-      eventStream.push(nextEvent)
+  pull(
+    nextActions.listen(),
+    pull.drain(function (nextAction) {
+      // queue next actions on next tick
+      process.nextTick(function () {
+        actions(nextAction)
+      })
     })
-  })
+  )
 
-  return streams
-}
-
-function getStreams (app, eventStream) {
-  var onStopCallbacks = []
-  var readableEventStream = ReadableStream(eventStream)
-
-  function dispatch (nextEvent) {
-    eventStream.push(nextEvent)
+  function dispatch (nextAction) {
+    nextActions(nextAction)
   }
 
   var initialState = app.init()
-  var stateStream = StateStream(initialState)
+  var states = notify()
+  pull(
+    actions.listen(),
+    pull.map(reduceActions(app.update, initialState)),
+    pull.drain(states)
+  )
 
-  readableEventStream(function (event) {
-    var state = stateStream()
-    var nextState = app.update(state.model, event)
-    stateStream.push(nextState)
-  })
+  var models = notify()
+  pull(
+    states.listen(),
+    pull.map(function (state) {
+      return state.model
+    }),
+    pull.unique(),
+    pull.drain(models)
+  )
 
-  var modelStream = StateStream()
-  onStopCallbacks.push(push(
-    stateStream,
-    MapStream(function (state) { return state.model }),
-    UniqStream(),
-    modelStream
-  ))
-
-  var viewStream = StateStream()
-  onStopCallbacks.push(push(
-    modelStream,
-    MapStream(function (model) {
+  var views = notify()
+  pull(
+    models.listen(),
+    pull.map(function (model) {
       return app.view(model, dispatch)
     }),
-    FilterStream(isNotNil),
-    viewStream
-  ))
+    pull.filter(isNotNil),
+    pull.drain(views)
+  )
 
-  var effectStream = StateStream()
-  onStopCallbacks.push(push(
-    stateStream,
-    MapStream(function (state) { return state.effect }),
-    FilterStream(isNotNil),
-    effectStream
-  ))
+  var effects = notify()
+  pull(
+    states.listen(),
+    pull.map(function (state) {
+      return state.effect
+    }),
+    pull.filter(isNotNil),
+    pull.drain(effects)
+  )
 
-  var nextEventStream = Stream()
-  onStopCallbacks.push(push(
-    effectStream,
-    MapStream(function (effect) {
+  pull(
+    effects.listen(),
+    pull.drain(function (effect) {
+      const result = app.run(effect, actions.listen)
       pull(
-        app.run(effect, readableEventStream),
-        drain(function (nextEvent) {
-          if (isNotNil(nextEvent)) {
-            nextEventStream.push(nextEvent)
-          }
-        })
+        isNotNil(result) ? result : push.empty(),
+        pull.filter(isNotNil),
+        pull.drain(nextActions)
       )
     })
-  ))
+  )
+
+  states(initialState)
 
   return {
     stop: stop,
-    eventStream: readableEventStream,
-    nextEventStream: ReadableStream(nextEventStream),
-    modelStream: ReadableStream(modelStream),
-    viewStream: ReadableStream(viewStream),
-    effectStream: ReadableStream(effectStream)
+    actions: actions.listen,
+    states: states.listen,
+    models: models.listen,
+    views: views.listen,
+    effects: effects.listen,
+    nextActions: nextActions.listen
   }
 
   function stop () {
-    for (var i = 0; i < onStopCallbacks.length; i++) {
-      onStopCallbacks()
-    }
+    ;[
+      actions,
+      states,
+      models,
+      views,
+      effects,
+      nextActions
+    ].forEach(function (stream) {
+      stream.end()
+    })
   }
 }
 
 function isNotNil (x) { return x != null }
+
+function reduceActions (lambda, initialState) {
+  var state = initialState
+  return function update (action) {
+    state = lambda(state.model, action)
+    return state
+  }
+}

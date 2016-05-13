@@ -1,5 +1,4 @@
-const html = require('yo-yo')
-const inu = require('../')
+const { start, html, pull } = require('../')
 
 const compose = require('./compose')
 
@@ -17,8 +16,11 @@ const app = compose(apps, (a, b) => html`
   </main>
 `)
 
-const streams = inu.start(app)
+const streams = start(app)
 
-streams.viewStream(function (view) {
-  html.update(main, view)
-})
+pull(
+  streams.views(),
+  pull.drain(function (view) {
+    html.update(main, view)
+  })
+)

@@ -1,4 +1,4 @@
-const html = require('yo-yo')
+const { html, pull } = require('../')
 
 // title demo
 module.exports = {
@@ -7,16 +7,12 @@ module.exports = {
     model: 'my demo app'
   }),
 
-  update: (model, event) => {
-    console.log('model', model, event)
-    switch (event.type) {
+  update: (model, action) => {
+    switch (action.type) {
       case 'SET':
         return {
-          model: event.payload,
-          effect: {
-            type: 'DO_SET',
-            payload: event.payload
-          }
+          model: action.payload,
+          effect: action,
         }
       default:
         return { model }
@@ -40,7 +36,7 @@ module.exports = {
 
   run: (effect) =>  {
     switch (effect.type) {
-      case 'DO_SET':
+      case 'SET':
         document.title = effect.payload
     }
   }

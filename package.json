@@ -5,29 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "tape test.js",
-    "start": "budo examples:bundle.js -d examples --live -- -d",
-    "bundle": "browserify examples -g envify -g uglifyify",
+    "start": "budo examples:bundle.js -d examples --live -- -d -t babelify",
+    "bundle": "browserify -t babelify examples -g envify -g uglifyify",
     "build": "npm run --silent bundle -- -o examples/bundle.js",
     "disc": "browserify index.js -g envify -g uglifyify --full-paths | discify --open",
     "push": "gh-pages -d examples",
     "deploy": "npm-run-all -s build push"
   },
-  "browserify": {
-    "transform": [
-      "yo-yoify",
-      [
-        "babelify",
-        {
-          "presets": [
-            "es2015"
-          ],
-          "plugins": [
-            "transform-object-rest-spread"
-          ]
-        }
-      ]
-    ]
-  },
+  "browserify": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ahdinosaur/inu.git"
@@ -50,13 +35,14 @@
     "gh-pages": "^0.11.0",
     "npm-run-all": "^1.6.0",
     "pull-cat": "^1.1.9",
+    "pull-delay": "^1.0.1",
     "tape": "^4.5.1",
     "uglifyify": "^3.0.1",
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "pull-notify": "^0.1.0",
     "pull-stream": "^3.3.2",
-    "push-stream": "^2.0.2",
     "yo-yo": "^1.2.0"
   }
 }
