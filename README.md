@@ -1,6 +1,6 @@
 # inu
 
-simple composable unidirectional user interfaces
+simple composable unidirectional user interfaces using [pull streams](https://github.com/dominictarr/pull-stream)
 
 ```shell
 npm install --save inu
@@ -22,8 +22,6 @@ explained best by [`jarvisaoieong/redux-architecture`](https://raw.githubusercon
 has found the proper way to do it right. Beside composing Views, State and Reducers (which are already composed in classical Redux), **Actions** and **Effects** should be composed too. All that leads to composition of application pieces at the higher level.
 
 > ![](http://i.imgur.com/NJWLXHz.png)
-
-`inu` is a framework for fractal applications composed of state, reducers, views, and effect runners. it is built using the streaming library [`pull-stream`](https://github.com/dominictarr/pull-stream).
 
 ## example
 
