@@ -36,7 +36,7 @@ function start (app) {
     pull.map(function (state) {
       return state.model
     }),
-    pull.unique(),
+    difference(),
     pull.drain(models)
   )
 
@@ -113,4 +113,13 @@ function scan (value, accumulator) {
     return value
   })
 }
+
+// TODO extract out into `pull-difference`
+function difference () {
+  var lastValue
+  return pull.filter(function (value) {
+    var condition = value !== lastValue
+    lastValue = value
+    return condition
+  })
 }
