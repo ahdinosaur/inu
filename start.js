@@ -24,7 +24,9 @@ function start (app) {
   var states = notify()
   pull(
     actions.listen(),
-    pull.map(reduceActions(app.update, initialState)),
+    scan(function (state, action) {
+      return app.update(state.model, action)
+    }),
     pull.drain(states)
   )
 
@@ -104,10 +106,11 @@ function start (app) {
 
 function isNotNil (x) { return x != null }
 
-function reduceActions (lambda, initialState) {
-  var state = initialState
-  return function update (action) {
-    state = lambda(state.model, action)
-    return state
-  }
+// TODO extract out into `pull-scan`
+function scan (value, accumulator) {
+  return pull.map(function update (nextValue) {
+    value = accumulator(value, nextValue)
+    return value
+  })
+}
 }
