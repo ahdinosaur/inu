@@ -74,7 +74,9 @@ function start (app) {
     pull.drain(actions)
   )
 
-  states(initialState)
+  process.nextTick(function () {
+    states(initialState)
+  })
 
   return {
     stop: stop,
