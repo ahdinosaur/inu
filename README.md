@@ -104,8 +104,7 @@ streams is an object with the following keys:
 - `models`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for models
 - `views`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for views
 - `effects`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for effects
-- `nextActionStreams`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for any streams of next actions caused by effects
-- `nextActions`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for next actions to be dispatched
+- `effectActionStreams`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for any streams of next actions caused by effects
 
 ![streams flow diagram](https://rawgit.com/ahdinosaur/inu/master/assets/flow-diagram.dot.svg)
 

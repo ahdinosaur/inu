@@ -1,10 +1,9 @@
 digraph app {
-  nextActions -> actions [label="process.nextTick()"]
   actions -> states [label="update()"]
-  states -> models [label="state.model"]
-  states -> effects [label="state.effect"]
+  states -> models
+  states -> effects
   models -> views [label="view()"]
-  views -> nextActions [label="dispatch()"]
-  effects -> nextActionStreams [label="run()"]
-  nextActionStreams -> nextActions [label="flatten"]
+  views -> actions [label="dispatch()"]
+  effects -> effectActionStreams [label="run()"]
+  effectActionStreams -> actions
 }

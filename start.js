@@ -4,31 +4,20 @@ var notify = require('pull-notify')
 module.exports = start
 
 /*
-    --------- next actions <------
-    v                             |
-actions -> states -> effects -> run
-    ^         |
-    |         -----> models -> views
-    |                             |
-    ----------- dispatch <--------
+  ┌────── effectActionStreams ◀───────┐
+  ▼                                   |
+actions ─▶ states ─▶ effects ─────────┘
+  ▲          |
+  |          └─────▶ models ─▶ views ─┐
+  |                                   |
+  └──────────  dispatch ◀─────────────┘
 */
 
 function start (app) {
   var actions = notify()
-  var nextActions = notify()
-
-  pull(
-    nextActions.listen(),
-    pull.drain(function (nextAction) {
-      // queue next actions on next tick
-      process.nextTick(function () {
-        actions(nextAction)
-      })
-    })
-  )
 
   function dispatch (nextAction) {
-    nextActions(nextAction)
+    actions(nextAction)
   }
 
   var initialState = app.init()
@@ -69,20 +58,20 @@ function start (app) {
     pull.drain(effects)
   )
 
-  var nextActionStreams = notify()
+  var effectActionStreams = notify()
   pull(
     effects.listen(),
     pull.map(function (effect) {
       return app.run(effect, actions.listen)
     }),
     pull.filter(isNotNil),
-    pull.drain(nextActionStreams)
+    pull.drain(effectActionStreams)
   )
 
   pull(
-    nextActionStreams.listen(),
+    effectActionStreams.listen(),
     pull.flatten(),
-    pull.drain(nextActions)
+    pull.drain(actions)
   )
 
   states(initialState)
@@ -94,8 +83,7 @@ function start (app) {
     models: models.listen,
     views: views.listen,
     effects: effects.listen,
-    nextActionStreams: nextActionStreams.listen,
-    nextActions: nextActions.listen
+    effectActionStreams: effectActionStreams.listen,
   }
 
   function stop () {
@@ -105,7 +93,7 @@ function start (app) {
       models,
       views,
       effects,
-      nextActions
+      effectActionStreams
     ].forEach(function (stream) {
       stream.end()
     })
