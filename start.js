@@ -69,16 +69,20 @@ function start (app) {
     pull.drain(effects)
   )
 
+  var nextActionStreams = notify()
   pull(
     effects.listen(),
-    pull.drain(function (effect) {
-      const result = app.run(effect, actions.listen)
-      pull(
-        isNotNil(result) ? result : push.empty(),
-        pull.filter(isNotNil),
-        pull.drain(nextActions)
-      )
-    })
+    pull.map(function (effect) {
+      return app.run(effect, actions.listen)
+    }),
+    pull.filter(isNotNil),
+    pull.drain(nextActionStreams)
+  )
+
+  pull(
+    nextActionStreams.listen(),
+    pull.flatten(),
+    pull.drain(nextActions)
   )
 
   states(initialState)
@@ -90,6 +94,7 @@ function start (app) {
     models: models.listen,
     views: views.listen,
     effects: effects.listen,
+    nextActionStreams: nextActionStreams.listen,
     nextActions: nextActions.listen
   }
 
