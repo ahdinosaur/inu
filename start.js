@@ -24,7 +24,7 @@ function start (app) {
   var states = notify()
   pull(
     actions.listen(),
-    scan(function (state, action) {
+    scan(initialState, function (state, action) {
       return app.update(state.model, action)
     }),
     pull.drain(states)
