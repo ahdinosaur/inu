@@ -9,6 +9,8 @@
     "bundle": "browserify -t babelify examples -g envify -g uglifyify",
     "build": "npm run --silent bundle -- -o examples/bundle.js",
     "disc": "browserify index.js -g envify -g uglifyify --full-paths | discify --open",
+    "docs:flow-diagram": "dot -Tsvg -O assets/flow-diagram.dot",
+    "docs": "npm-run-all -p docs:*",
     "push": "gh-pages -d examples",
     "deploy": "npm-run-all -s build push"
   },

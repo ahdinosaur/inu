@@ -23,6 +23,8 @@ has found the proper way to do it right. Beside composing Views, State and Reduc
 
 > ![](http://i.imgur.com/NJWLXHz.png)
 
+`inu`'s implementation is more or less a direct port of [`tom`](https://github.com/gcanti/tom) using [pull streams](https://github.com/dominictarr/pull-stream) instead of [rx](https://www.npmjs.com/package/rx).
+
 ## example
 
 ```js
@@ -81,7 +83,7 @@ for a full example of composing multiple apps together, see [source](./examples/
 
 where *state* is an object with a required key `model` and an optional key `effect`,
 
-an `app` is defined by an object with the following keys:
+an `inu` app is defined by an object with the following keys:
 
 - `init`: a function returning the initial state
 - `update`: a `update(model, action)` pure function, returns the new state
@@ -102,7 +104,10 @@ streams is an object with the following keys:
 - `models`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for models
 - `views`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for views
 - `effects`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for effects
+- `nextActionStreams`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for any streams of next actions caused by effects
 - `nextActions`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for next actions to be dispatched
+
+![streams flow diagram](./assets/flow-diagram.dot.svg)
 
 ### `inu.html === require('yo-yo')`
 
