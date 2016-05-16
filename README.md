@@ -1,4 +1,6 @@
-# inu
+# inu [![stability][0]][1]
+[![npm version][2]][3] [![build status][4]][5] [![test coverage][6]][7]
+[![downloads][8]][9] [![js-standard-style][10]][11]
 
 simple composable unidirectional user interfaces using [pull streams](https://github.com/dominictarr/pull-stream)
 
@@ -136,3 +138,16 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+[0]: https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square
+[1]: https://nodejs.org/api/documentation.html#documentation_stability_index
+[2]: https://img.shields.io/npm/v/inu.svg?style=flat-square
+[3]: https://npmjs.org/package/inu
+[4]: https://img.shields.io/travis/yoshuawuyts/inu/master.svg?style=flat-square
+[5]: https://travis-ci.org/yoshuawuyts/inu
+[6]: https://img.shields.io/codecov/c/github/yoshuawuyts/inu/master.svg?style=flat-square
+[7]: https://codecov.io/github/yoshuawuyts/inu
+[8]: http://img.shields.io/npm/dm/inu.svg?style=flat-square
+[9]: https://npmjs.org/package/inu
+[10]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
+[11]: https://github.com/feross/standard
