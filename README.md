@@ -143,10 +143,10 @@ limitations under the License.
 [1]: https://nodejs.org/api/documentation.html#documentation_stability_index
 [2]: https://img.shields.io/npm/v/inu.svg?style=flat-square
 [3]: https://npmjs.org/package/inu
-[4]: https://img.shields.io/travis/yoshuawuyts/inu/master.svg?style=flat-square
-[5]: https://travis-ci.org/yoshuawuyts/inu
-[6]: https://img.shields.io/codecov/c/github/yoshuawuyts/inu/master.svg?style=flat-square
-[7]: https://codecov.io/github/yoshuawuyts/inu
+[4]: https://img.shields.io/travis/ahdinosaur/inu/master.svg?style=flat-square
+[5]: https://travis-ci.org/ahdinosaur/inu
+[6]: https://img.shields.io/codecov/c/github/ahdinosaur/inu/master.svg?style=flat-square
+[7]: https://codecov.io/github/ahdinosaur/inu
 [8]: http://img.shields.io/npm/dm/inu.svg?style=flat-square
 [9]: https://npmjs.org/package/inu
 [10]: https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square
