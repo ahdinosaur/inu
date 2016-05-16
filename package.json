@@ -4,7 +4,7 @@
   "description": "composable user interface state and effects manager",
   "main": "index.js",
   "scripts": {
-    "test": "tape test.js",
+    "test": "tape test/*.js",
     "start": "budo examples:bundle.js -d examples --live -- -d -t babelify",
     "bundle": "browserify -t babelify examples -g envify -g uglifyify",
     "build": "npm run --silent bundle -- -o examples/bundle.js",
