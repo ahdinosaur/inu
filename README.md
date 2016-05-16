@@ -2,7 +2,7 @@
 [![npm version][2]][3] [![build status][4]][5] [![test coverage][6]][7]
 [![downloads][8]][9] [![js-standard-style][10]][11]
 
-simple composable unidirectional user interfaces using [pull streams](https://github.com/dominictarr/pull-stream)
+simple composable unidirectional user interfaces using [pull streams](https://pull-stream.github.io)
 
 ```shell
 npm install --save inu
@@ -25,12 +25,13 @@ has found the proper way to do it right. Beside composing Views, State and Reduc
 
 > ![](http://i.imgur.com/NJWLXHz.png)
 
-`inu`'s implementation is more or less a direct port of [`tom`](https://github.com/gcanti/tom) using [pull streams](https://github.com/dominictarr/pull-stream) instead of [rx](https://www.npmjs.com/package/rx).
+`inu`'s implementation is more or less a direct port of [`tom`](https://github.com/gcanti/tom) using [pull streams](https://pull-stream.github.io) instead of [rx](https://www.npmjs.com/package/rx).
 
 ## example
 
 ```js
 const { start, html, pull } = require('inu')
+const delay = require('pull-delay')
 
 const app = {
 
@@ -90,7 +91,7 @@ an `inu` app is defined by an object with the following keys:
 - `init`: a function returning the initial state
 - `update`: a `update(model, action)` pure function, returns the new state
 - `view`: a `view(model, dispatch)` pure function, returns the user interface declaration
-- `run` (optional): a `run(effect, actions)` function, returns an optional [pull source stream](https://github.com/dominictarr/pull-stream) of future actions
+- `run` (optional): a `run(effect, actions)` function, returns an optional [pull source stream](https://pull-stream.github.io) of future actions
 
 ### `inu = require('inu')`
 
@@ -102,17 +103,17 @@ you can also require each module separately like `require('inu/start')`.
 
 streams is an object with the following keys:
 
-- `actions`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for actions
-- `models`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for models
-- `views`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for views
-- `effects`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for effects
-- `effectActionStreams`: a function that returns a [pull source stream](https://github.com/dominictarr/pull-stream) for any streams of next actions caused by effects
+- `actions`: a function that returns a [pull source stream](https://pull-stream.github.io) for actions
+- `models`: a function that returns a [pull source stream](https://pull-stream.github.io) for models
+- `views`: a function that returns a [pull source stream](https://pull-stream.github.io) for views
+- `effects`: a function that returns a [pull source stream](https://pull-stream.github.io) for effects
+- `effectActionStreams`: a function that returns a [pull source stream](https://pull-stream.github.io) for any streams of next actions caused by effects
 
 ![streams flow diagram](https://rawgit.com/ahdinosaur/inu/master/assets/flow-diagram.dot.svg)
 
-### `inu.html === require('yo-yo')`
+### [`inu.html === require('yo-yo')`](https://github.com/maxogden/yo-yo)
 
-### `inu.pull === require('pull-stream')`
+### [`inu.pull === require('pull-stream')`](https://pull-stream.github.io)
 
 ## inspiration
 
