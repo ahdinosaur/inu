@@ -87,7 +87,7 @@ function start (app) {
     models: models.listen,
     views: views.listen,
     effects: effects.listen,
-    effectActionStreams: effectActionStreams.listen,
+    effectActionStreams: effectActionStreams.listen
   }
 
   function stop () {

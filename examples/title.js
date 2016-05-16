@@ -1,4 +1,4 @@
-const { html, pull } = require('../')
+const { html } = require('../')
 
 // title demo
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
       case 'SET':
         return {
           model: action.payload,
-          effect: action,
+          effect: action
         }
       default:
         return { model }
@@ -34,7 +34,7 @@ module.exports = {
     </div>
   `,
 
-  run: (effect) =>  {
+  run: (effect) => {
     switch (effect.type) {
       case 'SET':
         document.title = effect.payload
