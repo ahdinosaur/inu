@@ -105,3 +105,31 @@ test('returning an action from effect emits actions on the action stream.', func
     t.end()
   }))
 })
+
+test('actions stream passed to run emits actions', function (t) {
+  var initialModel = {initial: true}
+  var expectedEffect = {type: 'EXPECTED_EFFECT'}
+  var expectedAction = {type: 'EXPECTED_ACTION'}
+  var app = {
+    init: function () {
+      return {
+        model: initialModel,
+        effect: expectedEffect
+      }
+    },
+    update: function (model, action) {
+      return {model: model}
+    },
+    view: function (model, dispatch) {
+      return inu.html`<div></div>`
+    },
+    run: function (effect, actions) {
+      pull(actions(), pull.drain(function (action) {
+        t.equal(action, expectedAction)
+        t.end()
+      }))
+      return pull.values([expectedAction])
+    }
+  }
+  inu.start(app)
+})
