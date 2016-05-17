@@ -124,7 +124,7 @@ test('actions stream passed to run emits actions', function (t) {
       return inu.html`<div></div>`
     },
     run: function (effect, actions) {
-      pull(actions(), pull.drain(function (action) {
+      pull(actions(), pull.take(1), pull.drain(function (action) {
         t.equal(action, expectedAction)
         t.end()
       }))
