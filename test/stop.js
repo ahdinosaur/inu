@@ -98,3 +98,26 @@ test('calling stop() ends models stream', function (t) {
   }))
   streams.stop()
 })
+test('calling stop() ends effectAction stream', function (t) {
+  var initialModel = {initial: true}
+  var app = {
+    init: function () {
+      return {model: initialModel}
+    },
+    update: function (model, action) {
+      t.equal(model, initialModel, 'model passed to update is set by initial state')
+      t.end()
+      return {model: model}
+    },
+    view: function (model, dispatch) {
+      return inu.html`<div></div>`
+    }
+  }
+  var streams = inu.start(app)
+  pull(streams.effectActionStreams(), pull.collect(function (err, effectActions) {
+    t.error(err)
+    t.equal(effectActions.length, 0, 'EffectActions stream ends with no emitted actions')
+    t.end()
+  }))
+  streams.stop()
+})
