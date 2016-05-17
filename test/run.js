@@ -21,7 +21,7 @@ test('returning an effect from update triggers the run function', function (t) {
       return inu.html`<div></div>`
     },
     run: function (effect) {
-      t.deepEqual(effect, expectedEffect, 'effect is equivalent to effect object returned in update')
+      t.equal(effect, expectedEffect, 'effect is equivalent to effect object returned in update')
       t.end()
     }
   }
@@ -45,12 +45,13 @@ test('returning an effect from init triggers the run function', function (t) {
       return inu.html`<div></div>`
     },
     run: function (effect) {
-      t.deepEqual(effect, expectedEffect, 'effect is equivalent to effect object returned in init')
+      t.equal(effect, expectedEffect, 'effect is equivalent to effect object returned in init')
       t.end()
     }
   }
   inu.start(app)
 })
+
 test('returning an action from effect triggers the update function', function (t) {
   var initialModel = {initial: true}
   var expectedEffect = {type: 'EXPECTED_EFFECT'}
@@ -63,7 +64,7 @@ test('returning an action from effect triggers the update function', function (t
       }
     },
     update: function (model, action) {
-      t.deepEqual(action, expectedAction, 'Action passed to update is equivalent to the one returned in run')
+      t.equal(action, expectedAction, 'Action passed to update is equivalent to the one returned in run')
       t.end()
       return {model: model}
     },
@@ -75,4 +76,32 @@ test('returning an action from effect triggers the update function', function (t
     }
   }
   inu.start(app)
+})
+
+test('returning an action from effect emits actions on the action stream.', function (t) {
+  var initialModel = {initial: true}
+  var expectedEffect = {type: 'EXPECTED_EFFECT'}
+  var expectedAction = {type: 'EXPECTED_ACTION'}
+  var app = {
+    init: function () {
+      return {
+        model: initialModel,
+        effect: expectedEffect
+      }
+    },
+    update: function (model, action) {
+      return {model: model}
+    },
+    view: function (model, dispatch) {
+      return inu.html`<div></div>`
+    },
+    run: function (effect) {
+      return pull.values([expectedAction])
+    }
+  }
+  var streams = inu.start(app)
+  pull(streams.actions(), pull.take(1), pull.drain(function (action) {
+    t.equal(action, expectedAction)
+    t.end()
+  }))
 })

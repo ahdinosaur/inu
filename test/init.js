@@ -9,7 +9,7 @@ test('initial state of model can be set in init', function (t) {
       return {model: initialModel}
     },
     update: function (model, action) {
-      t.deepEqual(model, initialModel, 'model passed to update is set by initial state')
+      t.equal(model, initialModel, 'model passed to update is set by initial state')
       t.end()
       return {model: model}
     },
