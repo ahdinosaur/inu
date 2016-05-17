@@ -8,7 +8,7 @@
     "test:deps": "dependency-check . && dependency-check . --extra --no-dev",
     "test:lint": "standard",
     "test:node": "NODE_ENV=test tape test/*.js",
-    "test:coverage": "NODE_ENV=test istanbul cover test/*.js",
+    "test:coverage": "NODE_ENV=test istanbul cover test",
     "test": "npm-run-all -s test:deps test:lint test:node",
     "docs:disc": "browserify index.js -g envify -g uglifyify --full-paths | discify > assets/disc.html",
     "docs:flow-diagram": "dot -Tsvg -O assets/flow-diagram.dot",
