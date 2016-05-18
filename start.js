@@ -1,3 +1,4 @@
+var defined = require('defined')
 var pull = require('pull-stream')
 var notify = require('pull-notify')
 
@@ -14,18 +15,25 @@ actions ─▶ states ─▶ effects ─────────┘
 */
 
 function start (app) {
+  app = defined(app, {})
+
+  var init = defined(app.init, defaultInit)
+  var update = defined(app.update, defaultUpdate)
+  var view = defined(app.view, noop)
+  var run = defined(app.run, noop)
+
   var actions = notify()
 
   function dispatch (nextAction) {
     actions(nextAction)
   }
 
-  var initialState = app.init()
+  var initialState = init.call(app)
   var states = notify()
   pull(
     actions.listen(),
     scan(initialState, function (state, action) {
-      return app.update(state.model, action)
+      return update.call(app, state.model, action)
     }),
     pull.drain(states)
   )
@@ -44,7 +52,7 @@ function start (app) {
   pull(
     models.listen(),
     pull.map(function (model) {
-      return app.view(model, dispatch)
+      return view.call(app, model, dispatch)
     }),
     pull.filter(isNotNil),
     pull.drain(views)
@@ -64,7 +72,7 @@ function start (app) {
   pull(
     effects.listen(),
     pull.map(function (effect) {
-      return app.run(effect, actions.listen)
+      return run.call(app, effect, actions.listen)
     }),
     pull.filter(isNotNil),
     pull.drain(effectActionStreams)
@@ -104,7 +112,10 @@ function start (app) {
   }
 }
 
+function noop () {}
 function isNotNil (x) { return x != null }
+function defaultInit () { return { model: null } }
+function defaultUpdate (model) { return { model: model } }
 
 // TODO extract out into `pull-scan`
 function scan (value, accumulator) {

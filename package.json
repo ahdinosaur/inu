@@ -50,6 +50,7 @@
     "watchify": "^3.7.0"
   },
   "dependencies": {
+    "defined": "^1.0.0",
     "pull-notify": "^0.1.0",
     "pull-stream": "^3.3.2",
     "yo-yo": "^1.2.0"

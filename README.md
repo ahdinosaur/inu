@@ -86,12 +86,12 @@ for a full example of composing multiple apps together, see [source](./examples/
 
 where *state* is an object with a required key `model` and an optional key `effect`,
 
-an `inu` app is defined by an object with the following keys:
+an `inu` app is defined by an object with the following (optional) keys:
 
 - `init`: a function returning the initial state
 - `update`: a `update(model, action)` pure function, returns the new state
 - `view`: a `view(model, dispatch)` pure function, returns the user interface declaration
-- `run` (optional): a `run(effect, actions)` function, returns an optional [pull source stream](https://pull-stream.github.io) of future actions
+- `run`: a `run(effect, actions)` function, returns an optional [pull source stream](https://pull-stream.github.io) of future actions
 
 ### `inu = require('inu')`
 
