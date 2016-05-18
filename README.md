@@ -121,6 +121,7 @@ streams is an object with the following keys:
 - [redux-architecture](https://github.com/jarvisaoieong/redux-architecture)
 - [elm-architecture-tutorial](https://github.com/evancz/elm-architecture-tutorial)
 - [mercury](https://github.com/Raynos/mercury)
+- [vdux](https://github.com/vdux/vdux)
 
 ## license
 
