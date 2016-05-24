@@ -1,6 +1,7 @@
 var defined = require('defined')
 var pull = require('pull-stream')
 var notify = require('pull-notify')
+var extend = require('xtend')
 
 module.exports = start
 
@@ -24,8 +25,8 @@ function start (app) {
 
   var actions = notify()
 
-  function dispatch (nextAction) {
-    actions(nextAction)
+  function dispatch (type, action) {
+    actions(createAction(type, action))
   }
 
   var initialState = init.call(app)
@@ -133,4 +134,12 @@ function difference () {
     lastValue = value
     return condition
   })
+}
+
+// TODO extract out into module
+function createAction (type, action) {
+  return (typeof type === 'object') ? type
+  : (typeof type === 'string') ?
+    extend({ type }, action)
+    : null
 }
