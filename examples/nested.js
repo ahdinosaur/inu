@@ -1,43 +1,36 @@
 const { html } = require('../')
-const mapValues = require('map-values')
-const extend = require('xtend')
+const assign = require('object-assign')
+const keys = require('own-enumerable-keys')
 
-const actions = createActionCreators({
-  increment: () => null,
-  decrement: () => null
-})
+const Increment = Symbol('Increment')
+const Decrement = Symbol('Decrement')
 
 module.exports = {
   init: () => ({ model: 0 }),
   update: combineUpdates({
-    increment: (model) => ({ model: model + 1 }),
-    decrement: (model) => ({ model: model - 1 })
+    [Increment]: (model) => ({ model: model + 1 }),
+    [Decrement]: (model) => ({ model: model - 1 })
   }),
   view: (model, dispatch) => html`
     <div>
       <button onclick=${(e) =>
-        dispatch(actions.decrement())
+        dispatch(action(Decrement))
       }> - </button>
       <div>${model}</div>
       <button onclick=${(e) =>
-        dispatch(actions.increment())
+        dispatch(action(Increment))
       }> + </button>
     </div>
   `
 }
 
-function createActionCreators (object) {
-  return mapValues(object, (payloadCreator, actionType) => {
-    return (...args) => ({
-      type: actionType,
-      payload: payloadCreator(...args)
-    })
-  })
+function action (type, payload) {
+  return { type, payload }
 }
 
 function combineUpdates (updates) {
   return reduceUpdates(
-    Object.keys(updates).map((actionType) => {
+    keys(updates).map((actionType) => {
       const update = updates[actionType]
 
       return function (model, action) {
@@ -50,12 +43,17 @@ function combineUpdates (updates) {
   )
 }
 
+function mapSymbols (object, cb) {
+  return Object.getOwnPropertySymbols(object)
+    .map((key) => cb(object[key], key))
+}
+
 function reduceUpdates (updates) {
   return function (model, action) {
     return updates.reduce(
-      (state, update) => {
-        return extend(state, update(state.model, action))
-      },
+      (state, update) => assign(
+        {}, state, update(state.model, action)
+      ),
       { model }
     )
   }
