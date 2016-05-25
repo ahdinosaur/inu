@@ -80,8 +80,7 @@ function start (app) {
 
   pull(
     effectActionStreams.listen(),
-    pull.flatten(),
-    pull.drain(actions)
+    drainMany(actions)
   )
 
   process.nextTick(function () {
@@ -133,4 +132,19 @@ function difference () {
     lastValue = value
     return condition
   })
+}
+
+// TODO extract out into `pull-drain-many` ?
+function drainMany (cb) {
+  return function (source) {
+    pull(
+      source,
+      pull.drain(function (stream) {
+        pull(
+          stream,
+          pull.drain(cb)
+        )
+      })
+    )
+  }
 }
