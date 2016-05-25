@@ -7,7 +7,8 @@ const main = document.querySelector('.main')
 const apps = [
   require('./title'),
   require('./counter'),
-  require('./clock')
+  require('./routing'),
+  require('./clock'),
 ]
 
 const app = compose(apps)

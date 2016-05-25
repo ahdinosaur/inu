@@ -1,5 +1,5 @@
 const { html, pull } = require('../')
-const cat = require('pull-cat')
+const many = require('pull-many')
 
 // apps as groupoid
 module.exports = compose
@@ -49,7 +49,7 @@ function compose (apps, template = defaultTemplate) {
             )
           : pull.empty()
       })
-      return cat(nextActions)
+      return many(nextActions)
     }
   }
 }
