@@ -58,3 +58,62 @@ function reduceUpdates (updates) {
     )
   }
 }
+
+/*
+function join (path) {
+  return path.join(':')
+}
+
+function split (path) {
+  return path.split(':')
+}
+
+function namespaceApp (ns, app) {
+  return {
+    init: () => namespaceState(ns, app.init()),
+    update: (model, action) => {
+      const nsAction = namespaceAction(action)
+      if (nsAction) {
+        return app.update(model, nsAction)
+      }
+      return { model }
+    },
+    // TODO run
+    view: app.view
+  }
+}
+
+const defaultApp = {
+  init: () => ({ model: null }),
+  update: (model) => ({ model }),
+  view: () => {},
+  run: () => {},
+}
+
+function mergeApps (apps) {
+  return apps.reduce((sofar, next) => {
+    
+  }, defaultApp)
+}
+
+function namespaceAction (ns, action) {
+  const path = split(action.type)
+  if (path[0] === ns) {
+    return assign(
+      {},
+      action,
+      { type: join(path.slice(1))
+    })
+  }
+  return false
+}
+
+function namespaceState (ns, state) {
+  return {
+    model: {
+      [ns]: state.model
+    },
+    effect: state.effect
+  }
+}
+*/
