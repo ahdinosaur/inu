@@ -5,7 +5,7 @@ const compose = require('./compose')
 const main = document.querySelector('main')
 
 const apps = [
-  require('./title'),
+  require('./nested'),
   require('./clock')
 ]
 

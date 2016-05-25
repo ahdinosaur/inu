@@ -41,13 +41,15 @@
     "envify": "^3.4.0",
     "gh-pages": "^0.11.0",
     "istanbul": "^0.4.3",
+    "map-values": "^1.0.1",
     "npm-run-all": "^1.6.0",
     "pull-cat": "^1.1.9",
     "pull-delay": "^1.0.1",
     "standard": "^7.0.1",
     "tape": "^4.5.1",
     "uglifyify": "^3.0.1",
-    "watchify": "^3.7.0"
+    "watchify": "^3.7.0",
+    "xtend": "^4.0.1"
   },
   "dependencies": {
     "defined": "^1.0.0",
