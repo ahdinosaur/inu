@@ -2,50 +2,59 @@ const { html } = require('../')
 const assign = require('object-assign')
 const keys = require('own-enumerable-keys')
 
-const Increment = Symbol('Increment')
-const Decrement = Symbol('Decrement')
+const INCREMENT = Symbol('increment')
+const DECREMENT = Symbol('decrement')
+const SET = Symbol('set')
+
+const increment = createAction(INCREMENT)
+const decrement = createAction(DECREMENT)
+const set = createAction(SET)
 
 module.exports = {
   init: () => ({ model: 0 }),
-  update: combineUpdates({
-    [Increment]: (model) => ({ model: model + 1 }),
-    [Decrement]: (model) => ({ model: model - 1 })
+  update: handleActions({
+    [INCREMENT]: (model) => ({ model: model + 1 }),
+    [DECREMENT]: (model) => ({ model: model - 1 }),
+    [SET]: (model, payload) => ({ model: payload })
   }),
   view: (model, dispatch) => html`
     <div>
       <button onclick=${(e) =>
-        dispatch(action(Decrement))
+        dispatch(decrement())
       }> - </button>
-      <div>${model}</div>
+      <input type='number'
+        oninput=${(ev) => {
+          dispatch(set(Number(ev.target.value)))
+        }}
+        value=${model}
+      />
       <button onclick=${(e) =>
-        dispatch(action(Increment))
+        dispatch(increment())
       }> + </button>
     </div>
   `
 }
 
-function action (type, payload) {
-  return { type, payload }
+function createAction (type, payloadCreator = identity) {
+  return (...args) => ({
+    type,
+    payload: payloadCreator(...args)
+  })
 }
 
-function combineUpdates (updates) {
+function handleActions (actionHandlers) {
   return reduceUpdates(
-    keys(updates).map((actionType) => {
-      const update = updates[actionType]
+    keys(actionHandlers).map((actionType) => {
+      const update = actionHandlers[actionType]
 
       return function (model, action) {
         if (action.type === actionType) {
-          return update(model, action)
+          return update(model, action.payload)
         }
         return { model }
       }
     })
   )
-}
-
-function mapSymbols (object, cb) {
-  return Object.getOwnPropertySymbols(object)
-    .map((key) => cb(object[key], key))
 }
 
 function reduceUpdates (updates) {
@@ -58,3 +67,5 @@ function reduceUpdates (updates) {
     )
   }
 }
+
+function identity (id) { return id }
