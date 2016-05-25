@@ -8,7 +8,7 @@ const apps = [
   require('./title'),
   require('./counter'),
   require('./routing'),
-  require('./clock'),
+  require('./clock')
 ]
 
 const app = compose(apps)

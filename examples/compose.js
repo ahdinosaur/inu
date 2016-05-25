@@ -58,8 +58,8 @@ function composeStates (states) {
   console.log('compose state', states)
   return {
     model: states.map(s => s.model),
-    effect: states.some(s => s.effect) ?
-      states.map(s => s.effect) : null
+    effect: states.some(s => s.effect)
+      ? states.map(s => s.effect) : null
   }
 }
 
@@ -70,7 +70,7 @@ function defaultTemplate (views) {
       views.map((view, i) => html`
         <div class=${`app-${i}`}>
           ${view}
-        </div>`    
+        </div>`
       )
     }
     </div>

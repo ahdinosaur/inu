@@ -1,8 +1,18 @@
-const Router = require('sheet-router')
+const assign = require('object-assign')
 const href = require('sheet-router/href')
 const history = require('sheet-router/history')
 const Pushable = require('pull-pushable')
-const { start, pull, html } = require('../')
+const { html } = require('../')
+
+/*
+const Router = require('sheet-router')
+const router = Router('/404', function (route) {
+  return [
+    route('/', (params) => yo`<div>where are you?</div>`),
+    route('/:place', (params) => yo`<div>welcome to ${params.place}</div>`, [
+  ]
+})
+*/
 
 // routing demo
 module.exports = {
@@ -17,7 +27,7 @@ module.exports = {
       case 'SET_LOCATION':
         return { model: action.payload }
       default:
-        return state
+        return { model }
     }
   },
 
@@ -37,7 +47,7 @@ module.exports = {
     if (effect !== 'INIT_ROUTER') { return }
     const effectActions = Pushable(function onClose (error) {
       // cleanup href and/or history
-      console.log('cleanup router!')
+      console.error(error)
     })
     // enable catching <href a=""></href> links
     href(push)
