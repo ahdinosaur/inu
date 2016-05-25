@@ -1,5 +1,5 @@
 const { html, pull } = require('../')
-const cat = require('pull-cat')
+const many = require('pull-many')
 
 // apps as groupoid
 module.exports = compose
@@ -49,7 +49,7 @@ function compose (apps, template = defaultTemplate) {
             )
           : pull.empty()
       })
-      return cat(nextActions)
+      return many(nextActions)
     }
   }
 }
@@ -58,8 +58,8 @@ function composeStates (states) {
   console.log('compose state', states)
   return {
     model: states.map(s => s.model),
-    effect: states.some(s => s.effect) ?
-      states.map(s => s.effect) : null
+    effect: states.some(s => s.effect)
+      ? states.map(s => s.effect) : null
   }
 }
 
@@ -70,7 +70,7 @@ function defaultTemplate (views) {
       views.map((view, i) => html`
         <div class=${`app-${i}`}>
           ${view}
-        </div>`    
+        </div>`
       )
     }
     </div>

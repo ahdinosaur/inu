@@ -7,6 +7,7 @@ const main = document.querySelector('.main')
 const apps = [
   require('./title'),
   require('./counter'),
+  require('./routing'),
   require('./clock')
 ]
 
