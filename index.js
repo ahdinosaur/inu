@@ -1,4 +1,5 @@
 module.exports = {
+  action: require('./action'),
   start: require('./start'),
   pull: require('./pull'),
   html: require('./html')

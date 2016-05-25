@@ -53,6 +53,7 @@
     "defined": "^1.0.0",
     "pull-notify": "^0.1.0",
     "pull-stream": "^3.3.2",
+    "xtend": "^4.0.1",
     "yo-yo": "^1.2.0"
   }
 }
