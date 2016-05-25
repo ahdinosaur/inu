@@ -45,7 +45,7 @@
     "object-assign": "^4.1.0",
     "own-enumerable-keys": "^1.0.0",
     "pull-delay": "^1.0.1",
-    "pull-many": "^1.0.6",
+    "sheet-router": "^3.0.1",
     "standard": "^7.0.1",
     "tape": "^4.5.1",
     "uglifyify": "^3.0.1",
