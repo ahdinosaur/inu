@@ -1,4 +1,3 @@
-const assign = require('object-assign')
 const href = require('sheet-router/href')
 const history = require('sheet-router/history')
 const Pushable = require('pull-pushable')
