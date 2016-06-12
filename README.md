@@ -115,6 +115,16 @@ streams is an object with the following keys:
 
 ### [`inu.pull === require('pull-stream')`](https://pull-stream.github.io)
 
+## examples
+
+- [./examples/clock](./examples/clock.js): simple app to count seconds
+- [./examples/title](./examples/title.js): simple app to change document.title
+- [./examples/routing](./examples/routing.js): url routing with [`sheet-router`](https://github.com/yoshuawuyts/sheet-router)
+- [./examples/compose](./examples/compose.js): multiplex many apps into one app
+- [./examples/counter](./examples/counter.js): simple counter expressed in standard redux pattern
+- [./examples](./examples/index.js): above examples composed into one app deployed at <http://dinosaur.is/inu>.
+- [pietgeursen/ssb-gathering-ui](https://github.com/pietgeursen/ssb-gathering-ui): Facebook-style events using [`inu`](./), [`muxrpc`](https://github.com/ssbc/muxrpc), [`sheetify`](https://github.com/stackcss/sheetify), [`tcomb`](https://github.com/gcanti/tcomb) and other fun stuff.
+
 ## inspiration
 
 - [tom](https://github.com/gcanti/tom)
