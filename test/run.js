@@ -123,7 +123,8 @@ test('actions stream passed to run emits actions', function (t) {
     view: function (model, dispatch) {
       return inu.html`<div></div>`
     },
-    run: function (effect, actions) {
+    run: function (effect, streams) {
+      const actions = streams.actions
       pull(actions(), pull.take(1), pull.drain(function (action) {
         t.equal(action, expectedAction)
         t.end()

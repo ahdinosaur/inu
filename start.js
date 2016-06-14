@@ -69,10 +69,20 @@ function start (app) {
   )
 
   var effectActionStreams = notify()
+
+  var streams = {
+    actions: actions.listen,
+    states: states.listen,
+    models: models.listen,
+    views: views.listen,
+    effects: effects.listen,
+    effectActionStreams: effectActionStreams.listen
+  }
+
   pull(
     effects.listen(),
     pull.map(function (effect) {
-      return run.call(app, effect, actions.listen)
+      return run.call(app, effect, streams)
     }),
     pull.filter(isNotNil),
     pull.drain(effectActionStreams)
@@ -87,15 +97,7 @@ function start (app) {
     states(initialState)
   })
 
-  return {
-    stop: stop,
-    actions: actions.listen,
-    states: states.listen,
-    models: models.listen,
-    views: views.listen,
-    effects: effects.listen,
-    effectActionStreams: effectActionStreams.listen
-  }
+  return Object.assign({}, streams, { stop: stop })
 
   function stop () {
     ;[
