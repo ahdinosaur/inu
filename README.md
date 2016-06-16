@@ -124,6 +124,7 @@ streams is an object with the following keys:
 - [./examples/counter](./examples/counter.js): simple counter expressed in standard redux pattern
 - [./examples](./examples/index.js): above examples composed into one app deployed at <http://dinosaur.is/inu>.
 - [pietgeursen/ssb-gathering-ui](https://github.com/pietgeursen/ssb-gathering-ui): Facebook-style events using [`inu`](./), [`muxrpc`](https://github.com/ssbc/muxrpc), [`sheetify`](https://github.com/stackcss/sheetify), [`tcomb`](https://github.com/gcanti/tcomb) and other fun stuff.
+- [ahdinosaur/inu-plays-roguelike](https://github.com/ahdinosaur/inu-plays-roguelike): ['Twitch Plays Pokémon'](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon)-style ['Roguelike'](https://en.wikipedia.org/wiki/Roguelike) game using [`inu`](https://github.com/ahdinosaur/inu), [`tcomb`](https://github.com/gcanti/tcomb), and things.
 
 ## inspiration
 
