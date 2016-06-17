@@ -15,9 +15,9 @@ test('newly created app renders initial state', function (t) {
       return inu.html`<div></div>`
     }
   }
-  var streams = inu.start(app)
+  var sources = inu.start(app)
   pull(
-    streams.views(),
+    sources.views(),
     pull.drain(function (view) {
       t.ok(view)
       t.end()

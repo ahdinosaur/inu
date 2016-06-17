@@ -57,8 +57,8 @@ test('Calling dispatch emits actions on the action stream.', function (t) {
       return inu.html`<div></div>`
     }
   }
-  var streams = inu.start(app)
-  pull(streams.actions(), pull.take(1), pull.drain(function (action) {
+  var sources = inu.start(app)
+  pull(sources.actions(), pull.take(1), pull.drain(function (action) {
     t.equal(action, expectedAction)
     t.end()
   }))

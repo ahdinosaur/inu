@@ -4,6 +4,6 @@ digraph app {
   states -> effects
   models -> views [label="view()"]
   views -> actions [label="dispatch()"]
-  effects -> effectActionStreams [label="run()"]
-  effectActionStreams -> actions
+  effects -> effectActionsSources [label="run()"]
+  effectActionsSources -> actions
 }

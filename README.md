@@ -107,7 +107,7 @@ streams is an object with the following keys:
 - `models`: a function that returns a [pull source stream](https://pull-stream.github.io) for models
 - `views`: a function that returns a [pull source stream](https://pull-stream.github.io) for views
 - `effects`: a function that returns a [pull source stream](https://pull-stream.github.io) for effects
-- `effectActionStreams`: a function that returns a [pull source stream](https://pull-stream.github.io) for any streams of next actions caused by effects
+- `effectActionsSources`: a function that returns a [pull source stream](https://pull-stream.github.io) for any streams of next actions caused by effects
 
 ![streams flow diagram](https://rawgit.com/ahdinosaur/inu/master/assets/flow-diagram.dot.svg)
 

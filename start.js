@@ -5,7 +5,7 @@ var notify = require('pull-notify')
 module.exports = start
 
 /*
-  ┌────── effectActionStreams ◀───────┐
+  ┌────── effectActionsSources ◀───────┐
   ▼                                   |
 actions ─▶ states ─▶ effects ─────────┘
   ▲          |
@@ -68,28 +68,33 @@ function start (app) {
     pull.drain(effects)
   )
 
-  var effectActionStreams = notify()
+  var effectActionsSources = notify()
 
-  var streams = {
-    actions: actions.listen,
-    states: states.listen,
-    models: models.listen,
-    views: views.listen,
-    effects: effects.listen,
-    effectActionStreams: effectActionStreams.listen
+  var notifys = {
+    actions: actions,
+    states: states,
+    models: models,
+    views: views,
+    effects: effects,
+    effectActionsSources: effectActionsSources
   }
+
+  var sources = {}
+  Object.keys(notifys).forEach(function (name) {
+    sources[name] = notifys[name].listen
+  })
 
   pull(
     effects.listen(),
     pull.map(function (effect) {
-      return run.call(app, effect, streams)
+      return run.call(app, effect, sources)
     }),
     pull.filter(isNotNil),
-    pull.drain(effectActionStreams)
+    pull.drain(effectActionsSources)
   )
 
   pull(
-    effectActionStreams.listen(),
+    effectActionsSources.listen(),
     drainMany(actions)
   )
 
@@ -97,18 +102,11 @@ function start (app) {
     states(initialState)
   })
 
-  return Object.assign({}, streams, { stop: stop })
+  return Object.assign({}, sources, { stop: stop })
 
   function stop () {
-    ;[
-      actions,
-      states,
-      models,
-      views,
-      effects,
-      effectActionStreams
-    ].forEach(function (stream) {
-      stream.end()
+    Object.keys(notifys).forEach(function (name) {
+      notifys[name].end()
     })
   }
 }

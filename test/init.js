@@ -40,8 +40,8 @@ test('returning an effect in init emits the effect on the effects stream', funct
     },
     run: function () {}
   }
-  var streams = inu.start(app)
-  pull(streams.effects(), pull.take(1), pull.drain(function (effect) {
+  var sources = inu.start(app)
+  pull(sources.effects(), pull.take(1), pull.drain(function (effect) {
     t.equal(effect, expectedEffect)
     t.end()
   }))
