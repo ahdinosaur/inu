@@ -2,6 +2,7 @@ var defined = require('defined')
 var pull = require('pull-stream')
 var Pushable = require('pull-pushable')
 var notify = require('pull-notify')
+var cat = require('pull-cat')
 
 module.exports = start
 
@@ -82,7 +83,10 @@ function start (app) {
 
   var sources = {}
   Object.keys(notifys).forEach(function (name) {
-    sources[name] = notifys[name].listen
+    var listen = notifys[name].listen
+    sources[name] = (
+      ['states', 'models', 'effects', 'views'].indexOf(name) !== -1
+    ) ? replayLastValue(listen) : listen
   })
 
   pull(
@@ -152,5 +156,22 @@ function drainMany (cb) {
         )
       })
     )
+  }
+}
+
+function replayLastValue (listen) {
+  var lastValue
+  pull(
+    listen(),
+    pull.drain(function (value) {
+      lastValue = value
+    })
+  )
+
+  return function listenWithLastValue () {
+    return cat([
+      lastValue == null ? undefined : pull.values([lastValue]),
+      listen()
+    ])
   }
 }
