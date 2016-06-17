@@ -104,12 +104,15 @@ you can also require each module separately like `require('inu/start')`.
 streams is an object with the following keys:
 
 - `actions`: a function that returns a [pull source stream](https://pull-stream.github.io) for actions
-- `models`: a function that returns a [pull source stream](https://pull-stream.github.io) for models
-- `views`: a function that returns a [pull source stream](https://pull-stream.github.io) for views
-- `effects`: a function that returns a [pull source stream](https://pull-stream.github.io) for effects
+- `states`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for states
+- `models`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for models
+- `views`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for views
+- `effects`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for effects
 - `effectActionsSources`: a function that returns a [pull source stream](https://pull-stream.github.io) for any streams of next actions caused by effects
 
 ![streams flow diagram](https://rawgit.com/ahdinosaur/inu/master/assets/flow-diagram.dot.svg)
+
+\* in this context, *state-ful* means that the pull source stream will always start with the last value (if any) first.
 
 ### [`inu.html === require('yo-yo')`](https://github.com/maxogden/yo-yo)
 

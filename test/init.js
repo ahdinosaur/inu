@@ -46,3 +46,38 @@ test('returning an effect in init emits the effect on the effects stream', funct
     t.end()
   }))
 })
+
+test('stateful sources pool last value', function (t) {
+  var app = {
+    init: function () {
+      return {
+        model: 'model',
+        effect: 'effect'
+      }
+    },
+    update: function (model, action) {
+      return {model: model}
+    },
+    view: function (model, dispatch) {
+      dispatch()
+      return inu.html`<div></div>`
+    },
+    run: function () {}
+  }
+  var sources = inu.start(app)
+  t.plan(4)
+  process.nextTick(function () {
+    pull(sources.states(), pull.take(1), pull.drain(function (model) {
+      t.deepEqual(model, { model: 'model', effect: 'effect' })
+    }))
+    pull(sources.models(), pull.take(1), pull.drain(function (model) {
+      t.equal(model, 'model')
+    }))
+    pull(sources.effects(), pull.take(1), pull.drain(function (effect) {
+      t.equal(effect, 'effect')
+    }))
+    pull(sources.views(), pull.take(1), pull.drain(function (view) {
+      t.equal(view.toString(), '<div></div>')
+    }))
+  })
+})
