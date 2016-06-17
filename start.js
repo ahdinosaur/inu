@@ -1,5 +1,6 @@
 var defined = require('defined')
 var pull = require('pull-stream')
+var Pushable = require('pull-pushable')
 var notify = require('pull-notify')
 
 module.exports = start
@@ -87,7 +88,12 @@ function start (app) {
   pull(
     effects.listen(),
     pull.map(function (effect) {
-      return run.call(app, effect, sources)
+      if (run.length > 2) {
+        var effectActionSink = Pushable()
+        run.call(app, effect, sources, effectActionSink)
+        return effectActionSink
+      }
+      return run.call(app, effect, sources, effectActionSink)
     }),
     pull.filter(isNotNil),
     pull.drain(effectActionSources)
