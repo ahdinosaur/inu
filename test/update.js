@@ -18,9 +18,9 @@ test('models returned by update are emitted by the model stream', function (t) {
       return inu.html`<div></div>`
     }
   }
-  var streams = inu.start(app)
+  var sources = inu.start(app)
 
-  pull(streams.models(), pull.take(2), pull.collect(function (err, models) {
+  pull(sources.models(), pull.take(2), pull.collect(function (err, models) {
     t.error(err)
     t.equal(models[0], initialModel)
     t.equal(models[1], expectedModel)

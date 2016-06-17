@@ -25,7 +25,7 @@ test('defaultUpdate', function (t) {
     model: expectedModel,
     effect: 'INITIALIZE'
   }
-  var streams = inu.start({
+  var sources = inu.start({
     init: function () { return initialState },
     run: function (effect) {
       t.equal(effect, initialState.effect, 'effect received')
@@ -35,7 +35,7 @@ test('defaultUpdate', function (t) {
     }
   })
   pull(
-    streams.models(),
+    sources.models(),
     pull.drain(function (model) {
       t.equal(model, expectedModel, 'initial model is expected')
       process.nextTick(function () {
@@ -47,9 +47,9 @@ test('defaultUpdate', function (t) {
 })
 
 test('defaultView', function (t) {
-  var streams = inu.start({})
+  var sources = inu.start({})
   pull(
-    streams.views(),
+    sources.views(),
     pull.drain(function (view) {
       t.notOk(true, 'did not expect to receive default empty view')
     })
@@ -70,14 +70,14 @@ test('defaultRun', function (t) {
     model: true,
     effect: 'INITIALIZE'
   }
-  var streams = inu.start({
+  var sources = inu.start({
     init: function () { return initialState },
     view: function (model, dispatch) {
       expectedActions.forEach(dispatch)
     }
   })
   pull(
-    streams.actions(),
+    sources.actions(),
     pull.take(3),
     pull.collect(function (err, actions) {
       t.error(err)
@@ -88,7 +88,7 @@ test('defaultRun', function (t) {
 })
 
 test('defaultApp', function (t) {
-  var streams = inu.start()
-  t.ok(streams, 'undefined app has streams')
+  var sources = inu.start()
+  t.ok(sources, 'undefined app has sources')
   t.end()
 })

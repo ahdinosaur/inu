@@ -99,8 +99,8 @@ test('returning an action from effect emits actions on the action stream.', func
       return pull.values([expectedAction])
     }
   }
-  var streams = inu.start(app)
-  pull(streams.actions(), pull.take(1), pull.drain(function (action) {
+  var sources = inu.start(app)
+  pull(sources.actions(), pull.take(1), pull.drain(function (action) {
     t.equal(action, expectedAction)
     t.end()
   }))
@@ -123,8 +123,8 @@ test('actions stream passed to run emits actions', function (t) {
     view: function (model, dispatch) {
       return inu.html`<div></div>`
     },
-    run: function (effect, streams) {
-      const actions = streams.actions
+    run: function (effect, sources) {
+      const actions = sources.actions
       pull(actions(), pull.take(1), pull.drain(function (action) {
         t.equal(action, expectedAction)
         t.end()
