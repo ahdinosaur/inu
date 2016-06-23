@@ -44,7 +44,7 @@ const app = {
     switch (action) {
       case 'TICK':
         return {
-          model: model === 59 ? 0 : model + 1,
+          model: (model + 1) % 60,
           effect: 'SCHEDULE_TICK'
         }
       default:
