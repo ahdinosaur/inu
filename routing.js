@@ -1,4 +1,3 @@
-const assign = require('object-assign')
 const href = require('sheet-router/href')
 const history = require('sheet-router/history')
 const Pushable = require('pull-pushable')
@@ -18,14 +17,14 @@ const router = Router('/404', function (route) {
 module.exports = {
 
   init: () => ({
-    model: { location: document.location.href },
+    model: document.location.href,
     effect: 'INIT_ROUTER'
   }),
 
   update: (model, action) => {
     switch (action.type) {
       case 'SET_LOCATION':
-        return { model: assign({}, model, { location: action.payload }) }
+        return { model: action.payload }
       default:
         return { model }
     }
@@ -33,7 +32,7 @@ module.exports = {
 
   view: (model, dispatch) => html`
     <div>
-      <h2>${model.location}</h2>
+      <h2>${model}</h2>
       <nav>
         <a href="./">home</a>
         <a href="./here">here</a>
