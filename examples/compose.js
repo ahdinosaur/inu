@@ -35,16 +35,18 @@ function compose (apps, template = defaultTemplate) {
       )
     },
 
-    run (effects, actions) {
+    run (effects, sources) {
       const nextActions = apps.map((app, i) => {
         const eff = effects[i]
         return eff
           ? pull(
-              app.run(eff, () => pull(
-                actions(),
-                pull.map(value => value[i]),
-                pull.filter(isNotNil)
-              )) || pull.empty(),
+              app.run(eff, {
+                actions: () => pull(
+                  sources.actions(),
+                  pull.map(value => value[i]),
+                  pull.filter(isNotNil)
+                )
+              }) || pull.empty(),
               pull.map(action => item(action, i))
             )
           : pull.empty()

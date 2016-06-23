@@ -42,7 +42,7 @@ module.exports = {
     </div>
   `,
 
-  run: (effect, actions) => {
+  run: (effect, sources) => {
     if (effect !== 'INIT_ROUTER') { return }
     const effectActions = Pushable(function onClose (error) {
       // cleanup href and/or history
