@@ -30,9 +30,19 @@ function start (app) {
   var run = defined(app.run, defaults.run)
 
   var actions = notify()
+  var nextActions = notify()
+
+  pull(
+    nextActions.listen(),
+    drain(function (value) {
+      process.nextTick(function () {
+        actions(value)
+      })
+    })
+  )
 
   function dispatch (nextAction) {
-    actions(nextAction)
+    nextActions(nextAction)
   }
 
   var initialState = init.call(app)
@@ -83,7 +93,8 @@ function start (app) {
     models: models,
     views: views,
     effects: effects,
-    effectActionsSources: effectActionsSources
+    effectActionsSources: effectActionsSources,
+    nextActions: nextActions
   }
 
   var sources = {}
@@ -105,7 +116,7 @@ function start (app) {
 
   pull(
     effectActionsSources.listen(),
-    drainMany(actions)
+    drainMany(nextActions)
   )
 
   process.nextTick(function () {
