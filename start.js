@@ -3,6 +3,8 @@ var pull = require('pull-stream')
 var notify = require('pull-notify')
 var cat = require('pull-cat')
 
+var defaults = require('./defaults')
+
 module.exports = start
 
 /*
@@ -18,10 +20,10 @@ actions ─▶ states ─▶ effects ─────────┘
 function start (app) {
   app = defined(app, {})
 
-  var init = defined(app.init, defaultInit)
-  var update = defined(app.update, defaultUpdate)
-  var view = defined(app.view, noop)
-  var run = defined(app.run, noop)
+  var init = defined(app.init, defaults.init)
+  var update = defined(app.update, defaults.update)
+  var view = defined(app.view, defaults.view)
+  var run = defined(app.run, defaults.run)
 
   var actions = notify()
 
@@ -115,10 +117,7 @@ function start (app) {
   }
 }
 
-function noop () {}
 function isNotNil (x) { return x != null }
-function defaultInit () { return { model: null } }
-function defaultUpdate (model) { return { model: model } }
 
 // TODO extract out into `pull-scan`
 function scan (value, accumulator) {
