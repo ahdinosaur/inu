@@ -1,5 +1,9 @@
 var defined = require('defined')
-var pull = require('pull-stream')
+var pull = require('pull-stream/pull')
+var values = require('pull-stream/sources/values')
+var map = require('pull-stream/throughs/map')
+var filter = require('pull-stream/throughs/filter')
+var drain = require('pull-stream/sinks/drain')
 var notify = require('pull-notify')
 var cat = require('pull-cat')
 
@@ -38,37 +42,37 @@ function start (app) {
     scan(initialState, function (state, action) {
       return update.call(app, state.model, action)
     }),
-    pull.drain(states)
+    drain(states)
   )
 
   var models = notify()
   pull(
     states.listen(),
-    pull.map(function (state) {
+    map(function (state) {
       return state.model
     }),
     difference(),
-    pull.drain(models)
+    drain(models)
   )
 
   var views = notify()
   pull(
     models.listen(),
-    pull.map(function (model) {
+    map(function (model) {
       return view.call(app, model, dispatch)
     }),
-    pull.filter(isNotNil),
-    pull.drain(views)
+    filter(isNotNil),
+    drain(views)
   )
 
   var effects = notify()
   pull(
     states.listen(),
-    pull.map(function (state) {
+    map(function (state) {
       return state.effect
     }),
-    pull.filter(isNotNil),
-    pull.drain(effects)
+    filter(isNotNil),
+    drain(effects)
   )
 
   var effectActionsSources = notify()
@@ -92,11 +96,11 @@ function start (app) {
 
   pull(
     effects.listen(),
-    pull.map(function (effect) {
+    map(function (effect) {
       return run.call(app, effect, sources)
     }),
-    pull.filter(isNotNil),
-    pull.drain(effectActionsSources)
+    filter(isNotNil),
+    drain(effectActionsSources)
   )
 
   pull(
@@ -121,7 +125,7 @@ function isNotNil (x) { return x != null }
 
 // TODO extract out into `pull-scan`
 function scan (value, accumulator) {
-  return pull.map(function update (nextValue) {
+  return map(function update (nextValue) {
     value = accumulator(value, nextValue)
     return value
   })
@@ -130,7 +134,7 @@ function scan (value, accumulator) {
 // TODO extract out into `pull-difference`
 function difference () {
   var lastValue
-  return pull.filter(function (value) {
+  return filter(function (value) {
     var condition = value !== lastValue
     lastValue = value
     return condition
@@ -142,10 +146,10 @@ function drainMany (cb) {
   return function (source) {
     pull(
       source,
-      pull.drain(function (stream) {
+      drain(function (stream) {
         pull(
           stream,
-          pull.drain(cb)
+          drain(cb)
         )
       })
     )
@@ -156,14 +160,14 @@ function replayLastValue (listen) {
   var lastValue
   pull(
     listen(),
-    pull.drain(function (value) {
+    drain(function (value) {
       lastValue = value
     })
   )
 
   return function listenWithLastValue () {
     return cat([
-      lastValue == null ? undefined : pull.values([lastValue]),
+      lastValue == null ? undefined : values([lastValue]),
       listen()
     ])
   }
