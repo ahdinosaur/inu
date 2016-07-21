@@ -58,7 +58,7 @@ const app = {
     </div>
   `,
 
-  run: (effect) => {
+  run: (effect, sources) => {
     switch (effect) {
       case 'SCHEDULE_TICK':
         return pull(
@@ -91,7 +91,7 @@ an `inu` app is defined by an object with the following (optional) keys:
 - `init`: a function returning the initial state
 - `update`: a `update(model, action)` pure function, returns the new state
 - `view`: a `view(model, dispatch)` pure function, returns the user interface declaration
-- `run`: a `run(effect, actions)` function, returns an optional [pull source stream](https://pull-stream.github.io) of future actions
+- `run`: a `run(effect, sources)` function, returns an optional [pull source stream](https://pull-stream.github.io) of future actions
 
 ### `inu = require('inu')`
 
@@ -99,16 +99,16 @@ the top-level `inu` module is a grab bag of all `inu/*` modules.
 
 you can also require each module separately like `require('inu/start')`.
 
-### `streams = inu.start(app)`
+### `sources = inu.start(app)`
 
-streams is an object with the following keys:
+sources is an object with the following keys:
 
 - `actions`: a function that returns a [pull source stream](https://pull-stream.github.io) for actions
 - `states`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for states
 - `models`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for models
 - `views`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for views
 - `effects`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for effects
-- `effectActionsSources`: a function that returns a [pull source stream](https://pull-stream.github.io) for any streams of next actions caused by effects
+- `effectActionsSources`: a function that returns a [pull source stream](https://pull-stream.github.io) for any sources of next actions caused by effects
 
 ![streams flow diagram](https://rawgit.com/ahdinosaur/inu/master/assets/flow-diagram.dot.svg)
 
