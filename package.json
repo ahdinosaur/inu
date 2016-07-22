@@ -44,6 +44,7 @@
     "npm-run-all": "^1.6.0",
     "object-assign": "^4.1.0",
     "own-enumerable-keys": "^1.0.0",
+    "pull-defer": "^0.2.2",
     "pull-delay": "^1.0.1",
     "sheet-router": "^3.0.1",
     "standard": "^7.0.1",
