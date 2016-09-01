@@ -305,9 +305,9 @@ sources is an object with the following keys:
 
 \* in this context, *state-ful* means that the pull source stream will always start with the last value (if any) first.
 
-### [`inu.html === require('yo-yo')`](https://github.com/maxogden/yo-yo)
+### [`inu.html === require('yo-yo')`](https://github.com/maxogden/yo-yo) (for templating, virtual DOM "diffing")
 
-### [`inu.pull === require('pull-stream')`](https://pull-stream.github.io)
+### [`inu.pull === require('pull-stream')`](https://pull-stream.github.io) (for async event "piping")
 
 ## install
 
