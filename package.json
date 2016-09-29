@@ -56,6 +56,7 @@
     "defined": "^1.0.0",
     "pull-cat": "^1.1.9",
     "pull-notify": "^0.1.0",
+    "pull-scan": "^1.0.0",
     "pull-stream": "^3.3.2",
     "yo-yo": "^1.2.0"
   }
