@@ -47,7 +47,7 @@
     "pull-defer": "^0.2.2",
     "pull-delay": "^1.0.1",
     "sheet-router": "^3.0.1",
-    "standard": "^7.0.1",
+    "standard": "^8.2.0",
     "tape": "^4.5.1",
     "uglifyify": "^3.0.1",
     "watchify": "^3.7.0"
