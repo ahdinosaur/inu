@@ -1,6 +1,5 @@
 const test = require('tape')
 const defer = require('pull-defer')
-const extend = require('extend')
 const inu = require('../')
 const pull = inu.pull
 
@@ -41,7 +40,7 @@ test('infinite loop if sync dispatch, model always new, and effect needs to run 
       }
     }
   }
-  const sources = inu.start(app)
+  inu.start(app)
 })
 
 test('no infinite loop if async dispatch, model always new, and effect needs to run async', function (t) {
@@ -87,5 +86,5 @@ test('no infinite loop if async dispatch, model always new, and effect needs to 
       }
     }
   }
-  const sources = inu.start(app)
+  inu.start(app)
 })

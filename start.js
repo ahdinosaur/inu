@@ -6,6 +6,7 @@ var filter = require('pull-stream/throughs/filter')
 var drain = require('pull-stream/sinks/drain')
 var notify = require('pull-notify')
 var cat = require('pull-cat')
+var scan = require('pull-scan')
 
 var defaults = require('./defaults')
 
@@ -39,9 +40,9 @@ function start (app) {
   var states = notify()
   pull(
     actions.listen(),
-    scan(initialState, function (state, action) {
+    scan(function (state, action) {
       return update.call(app, state.model, action)
-    }),
+    }, initialState),
     drain(states)
   )
 
@@ -122,14 +123,6 @@ function start (app) {
 }
 
 function isNotNil (x) { return x != null }
-
-// TODO extract out into `pull-scan`
-function scan (value, accumulator) {
-  return map(function update (nextValue) {
-    value = accumulator(value, nextValue)
-    return value
-  })
-}
 
 // TODO extract out into `pull-difference`
 function difference () {
