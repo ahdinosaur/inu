@@ -80,7 +80,7 @@
 ## example
 
 ```js
-const { start, html, pull } = require('inu')
+const { State, Action, Effect } = require('inu')
 const delay = require('pull-delay')
 
 const app = {
@@ -134,180 +134,19 @@ for a full example of composing multiple apps together, see [source](./examples/
 
 ## concepts
 
-imagine your app’s current state is described as a plain object. for example, the initial state of a todo app might look like this:
-
-```js
-var initState = {
-  model: {
-    todos: [{
-      text: 'Eat food',
-      completed: true
-    }, { 
-      text: 'Exercise',
-      completed: false
-    }],
-    visibilityFilter: 'SHOW_COMPLETED'
-  },
-  effect: 'FETCH_TODOS'
-}
-```
-
-this state object describes the _model_ (a list of todo items and an option for how to filter these items) and any optional _effect_ (we immediately want to fetch for any new todo items).
-
-to change something in the state, we need to dispatch an action. an action is a plain JavaScript object (notice how we don’t introduce any magic?) that describes what happened. here are a few example actions:
-
-```js
-{ type: 'ADD_TODO', text: 'Go to swimming pool' }
-{ type: 'TOGGLE_TODO', index: 1 }
-{ type: 'SET_VISIBILITY_FILTER', filter: 'SHOW_ALL' }
-{ type: 'LOAD_TODOS' }
-```
-
-enforcing that every change is described as an action lets us have a clear understanding of what’s going on in the app. if something changed, we know why it changed. actions are like breadcrumbs of what has happened.
-
-finally, to tie state and actions together, we write an _update_ function. again, nothing magic about it — it’s just a function that takes the model and action as arguments, and returns the next state of the app.
-
-it would be hard to write such a function for a big app, so we write smaller functions managing parts of the state:
-
-```js
-function visibilityFilter (model, action) {
-  if (action.type === 'SET_VISIBILITY_FILTER') {
-    return action.filter
-  } else {
-    return { model }
-  }
-}
-
-function todos (model, action) {
-  switch (action.type) {
-    case 'ADD_TODO':
-      return { model: model.concat([{ text: action.text, completed: false }]) }
-    case 'TOGGLE_TODO':
-      return {
-        model: model.map((todo, index) =>
-          action.index === index ?
-            { text: todo.text, completed: !todo.completed } :
-            todo
-        )
-      }
-    case 'LOAD_TODOS':
-      return { model, effect: 'FETCH_TODOS' }
-    default:
-      return { model }
-  }
-}
-```
-
-and we write another update function that manages the complete state of our app by calling those two update functions for the corresponding state keys:
-
-```js
-function appUpdate (model, action) {
-  const todosState = todos(model.todos, action)
-  const visibilityFilterState = visibilityFilter(model.visibilityFilter, action)
-
-  return {
-    model: {
-      todos: todosState.model,
-      visibilityFilter: visibilityFilter.model
-    },
-    effect: todosState.effect
-  }
-}
-```
-
-if any effect is returned by an update function, we want to run it. this run functions is able to listen to any future changes and return a stream of any new actions.
-
-here's how we handle our effect to fetch any todos, using [`pull-stream`](https://github.com/pull-stream/pull-stream) as `pull`:
-
-```js
-function appRun (effect, sources) {
-  if (effect === 'FETCH_TODOS') {
-    return pull(
-      fetchTodos(),
-      pull.map(todo => {
-        return {
-          type: 'ADD_TODO',
-          text: todo.text
-        }
-      })
-    )
-  }
-}
-```
-
-now that we have our state, changes, and side effects managed in a predictable (and easy-to-test) way, we want to view our epic todo list.
-
-here's a simplified view using [`yo-yo`](https://github.com/maxogden/yo-yo) as `html`:
-
-```js
-function appView (model, dispatch) {
-  return html`
-    <div class='todos'>
-      ${model.todos.map((todo, index) => html`
-        <div class='todo'>
-          ${todo.text}
-          <button onclick=${toggleTodo(index)}
-        </div>
-      `)}
-    </div>
-  `
-
-  function toggleTodo (index) {
-    return (ev) => dispatch({ 'TOGGLE_TODO', })
-  }
-}
-```
-
-put it all together and we have an `inu` app!
-
-```js
-const app = {
-  init: () => initState,
-  update: appUpdate,
-  view: appView,
-  run: appRun
-}
-```
-
-that's it for `inu`. note that we're only using plain functions and objects. `inu` (and [`inux`](https://github.com/ahdinosaur/inux)) come with a few utilities to facilitate this pattern, but the main idea is that you describe how your state is updated over time in response to action objects, and 90% of the code you write is just plain JavaScript, with no use of `inu` itself, its APIs, or any magic.
-
-([credit @gaearon of `redux` for initial source of this intro](https://www.reddit.com/r/reactjs/comments/4npzq5/confused_redux_or_mobx/d46k2bl))
+TODO
 
 ## api
-
-where *state* is an object with a required key `model` and an optional key `effect`,
-
-an `inu` app is defined by an object with the following (optional) keys:
-
-- `init`: a function returning the initial state
-- `update`: a `update(model, action)` pure function, returns the new state
-- `view`: a `view(model, dispatch)` pure function, returns the user interface declaration
-- `run`: a `run(effect, sources)` function, returns an optional [pull source stream](https://pull-stream.github.io) of future actions
 
 ### `inu = require('inu')`
 
 the top-level `inu` module is a grab bag of all `inu/*` modules.
 
-you can also require each module separately like `require('inu/start')`.
+you can also require each module separately like `require('inu/state')`.
 
-### `sources = inu.start(app)`
-
-sources is an object with the following keys:
-
-- `actions`: a function that returns a [pull source stream](https://pull-stream.github.io) for actions
-- `states`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for states
-- `models`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for models
-- `views`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for views
-- `effects`: a function that returns a state-ful\* [pull source stream](https://pull-stream.github.io) for effects
-- `effectActionsSources`: a function that returns a [pull source stream](https://pull-stream.github.io) for any sources of next actions caused by effects
-
-![streams flow diagram](https://rawgit.com/ahdinosaur/inu/master/assets/flow-diagram.dot.svg)
-
-\* in this context, *state-ful* means that the pull source stream will always start with the last value (if any) first.
-
-### [`inu.html === require('yo-yo')`](https://github.com/maxogden/yo-yo) (for templating, virtual DOM "diffing")
-
-### [`inu.pull === require('pull-stream')`](https://pull-stream.github.io) (for async event "piping")
+### `stateModule = inu.State(definiton)`
+### `actionModule = inu.Action(definiton)`
+### `effectModule = inu.Effect(definiton)`
 
 ## install
 
@@ -315,13 +154,9 @@ sources is an object with the following keys:
 npm install --save inu
 ```
 
-## inspiration
+## see also
 
-- [tom](https://github.com/gcanti/tom): `inu`'s implementation is more or less a direct port of [`tom`](https://github.com/gcanti/tom) using [pull streams](https://pull-stream.github.io) instead of [rx](https://www.npmjs.com/package/rx)
-- [redux-architecture](https://github.com/jarvisaoieong/redux-architecture)
-- [elm-architecture-tutorial](https://github.com/evancz/elm-architecture-tutorial)
-- [mercury](https://github.com/Raynos/mercury)
-- [vdux](https://github.com/vdux/vdux)
+- [`inu-engine`](https://github.com/ahdinosaur/inu-engine)
 
 ## license
 

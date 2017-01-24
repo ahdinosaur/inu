@@ -1,9 +1,0 @@
-digraph app {
-  actions -> states [label="update()"]
-  states -> models
-  states -> effects
-  models -> views [label="view()"]
-  views -> actions [label="dispatch()"]
-  effects -> effectActionsSources [label="run()"]
-  effectActionsSources -> actions
-}
