@@ -52,6 +52,7 @@
   "dependencies": {
     "@f/set-prop": "^1.0.0",
     "es2040": "^1.2.4",
+    "inu-engine": "github:ahdinosaur/inu-engine",
     "inu-multi": "^1.0.4",
     "libnested": "^1.1.0",
     "object-assign": "^4.1.1",

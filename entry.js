@@ -13,7 +13,7 @@ function entry (sockets) {
 
   const store = { init, update, run, view }
 
-  const enhancer = apply.reduce(sockets.inux.enhancer)
+  const enhancer = apply.reduce(sockets.inu.enhancer)
 
   return enhancer(store)
 }

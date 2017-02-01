@@ -42,7 +42,7 @@ const view = {
   gives: { inu: { view: true } },
   create: (api) => {
     return { inu: { view } }
-    
+
     function view (model) {
       return api.inu.html`
         <div class='clock'>
