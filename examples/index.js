@@ -2,7 +2,6 @@ const combine = require('depject')
 const pull = require('pull-stream')
 const delay = require('pull-delay')
 const start = require('inu-engine')
-const html = require('yo-yo')
 const inu = require('../')
 
 const state = inu.State({
@@ -38,13 +37,13 @@ const scheduleTick = inu.Effect({
 })
 
 const view = {
-  needs: { inu: { html: 'first' } },
+  needs: { html: { create: 'first' } },
   gives: { inu: { view: true } },
   create: (api) => {
     return { inu: { view } }
 
     function view (model) {
-      return api.inu.html`
+      return api.html.create`
         <div class='clock'>
           Seconds Elapsed: ${model}
         </div>
@@ -66,4 +65,4 @@ const store = inu.entry(sockets)
 const { views } = start(store)
 
 const main = document.querySelector('.main')
-pull(views(), pull.drain(html.update.bind(null, main)))
+pull(views(), pull.drain(sockets.html.update[0].bind(null, main)))

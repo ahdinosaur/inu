@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "@f/set-prop": "^1.0.0",
+    "depnest": "^1.0.2",
     "es2040": "^1.2.4",
     "inu-engine": "github:ahdinosaur/inu-engine",
     "inu-multi": "^1.0.4",

@@ -1,6 +1,13 @@
 const html = require('yo-yo')
+const nest = require('depnest')
 
 module.exports = {
-  gives: { inu: { html: true } },
-  create: () => ({ inu: { html } })
+  gives: nest('html', [
+    'create',
+    'update'
+  ]),
+  create: () => nest('html', {
+    create: html,
+    update: html.update
+  })
 }
